@@ -1,4 +1,3 @@
-import { Request, Response } from 'express';
 import { UserController } from "../user.controller";
 import { FileUserClientRepository } from "./repositories/file-user-client.repository";
 import { UserClientList } from './repositories/in-memory-user-client.repository';
