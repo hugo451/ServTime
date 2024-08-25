@@ -1,6 +1,5 @@
 import { Router } from "express";
-import { CreateClientController } from "./controllers/user/create-user-client";
-import { GetClientController } from "./controllers/user/get-user-client";
+import { UserClientController } from "./user/user-client/user-client.controller";
 
 const router = Router();
 
@@ -8,7 +7,7 @@ router.get('/', (req, res) => {
     res.send('Hello World!')
 });
 
-router.get('/client', new GetClientController().handle);
-router.post('/client', new CreateClientController().handle);
+router.get('/client', (req, res) => new UserClientController().getAll(req, res));
+router.post('/client', (req, res) => new UserClientController().create(req, res));
 
 export { router };
