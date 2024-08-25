@@ -1,4 +1,3 @@
-import { Request, Response } from 'express';
 import { UserController } from "../user.controller";
 import { FileUserClientRepository } from "./repositories/file-user-client.repository";
 import { UserClientList } from './repositories/in-memory-user-client.repository';
@@ -63,82 +62,6 @@ export class UserClientController extends UserController {
                 throw error; 
             }
             throw new UserCreateException('Failed to create user.', UserCreateErrorCode.USER_CREATE_FAILED);
-        }
-    }
-
-    async create(request: Request, response: Response): Promise<Response> {
-        try {
-            const userBody: UserClient = request.body;
-            console.log(userBody);
-            const result = await this.handleCreate(userBody);
-            return response.status(201).json(result);
-        } catch (error) {
-            if (error instanceof UserCreateException) {
-                return response.status(400).json({
-                    message: error.message,
-                    code: error.code
-                });
-            }
-            return response.status(500).json({
-                message: 'An internal server error occurred.',
-                code: UserCreateErrorCode.INTERNAL_SERVER_ERROR
-            });
-        }
-    }
-
-    async getAll(_: Request, response: Response): Promise<Response> {
-        try {
-            const users = await this.handleGetAll();
-            return response.status(200).json(users);
-        } catch (error) {
-            if (error instanceof UserCreateException) {
-                return response.status(400).json({
-                    message: error.message,
-                    code: error.code
-                });
-            }
-            return response.status(500).json({
-                message: 'An internal server error occurred.',
-                code: UserCreateErrorCode.INTERNAL_SERVER_ERROR
-            });
-        }
-    }
-
-    async update(request: Request, response: Response): Promise<Response> {
-        const userBody: UserClient = request.body;
-        try {
-            const updatedUser = await this.handleUpdate(userBody);
-            return response.status(200).json(updatedUser);
-        } catch (error) {
-            if (error instanceof UserCreateException) {
-                return response.status(400).json({
-                    message: error.message,
-                    code: error.code
-                });
-            }
-            return response.status(500).json({
-                message: 'An internal server error occurred.',
-                code: UserCreateErrorCode.INTERNAL_SERVER_ERROR
-            });
-        }
-    }
-
-    async delete(request: Request, response: Response): Promise<Response> {
-        const userId = request.params.id;
-        try {
-            const result = await this.handleDelete(userId);
-            return response.status(200).json({ success: result });
-        } catch (error) {
-            if (error instanceof UserCreateException) {
-                return response.status(400).json({
-                    message: error.message,
-                    code: error.code
-                });
-            }
-            return response.status(500).json({
-                message: 'An internal server error occurred.',
-                code: UserCreateErrorCode.INTERNAL_SERVER_ERROR
-            });
         }
     }
 }
