@@ -1,6 +1,7 @@
 import { Router } from "express";
-import { UserClientController } from "./user/user-client/user-client.controller";
-import { ServiceClientController } from "./service/service-client/service-client.controller";
+import { UserClientController } from "./entities/user/user-client/user-client.controller";
+import { ServiceController } from "./entities/service/service.controller";
+import { CategoryController } from "./entities/category/category.controller";
 
 const router = Router();
 
@@ -8,10 +9,16 @@ router.get('/', (req, res) => {
     res.send('Hello World!')
 });
 
-router.get('/client', (req, res) => new UserClientController().getAll(req, res));
-router.post('/client', (req, res) => new UserClientController().create(req, res));
+const userClientController = new UserClientController();
+router.get('/client', (req, res) => userClientController.getAll(req, res));
+router.post('/client', (req, res) => userClientController.create(req, res));
 
-router.get('/service', (req, res) => new ServiceClientController().getAll(req, res));
-router.post('/service', (req, res) => new ServiceClientController().create(req, res));
+const serviceController = new ServiceController();
+router.get('/service', (req, res) => serviceController.getAll(req, res));
+router.post('/service', (req, res) => serviceController.create(req, res));
+
+const categoryController = new CategoryController();
+router.get('/category', (req, res) => categoryController.getAll(req, res));
+router.post('/category', (req, res) => categoryController.create(req, res));
 
 export { router };
