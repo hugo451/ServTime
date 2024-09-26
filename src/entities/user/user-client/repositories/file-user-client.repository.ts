@@ -1,11 +1,11 @@
 import * as path from 'path';
 import * as fs from 'fs';
-import { UserRepository } from '../../user.repository';
 import { UserCreateException, UserCreateErrorCode } from '../../exceptions/user-create.exception';
 import { UserClient } from '../user-client';
+import { Repository } from '../../../repository';
 
-export class FileUserClientRepository extends UserRepository {
-    private static _path = path.join(__dirname, '../../../files/users.json');
+export class FileUserClientRepository extends Repository<UserClient> {
+    private static _path = path.join(__dirname, '../../../../files/users.json');
     private static _instance: FileUserClientRepository;
 
     private constructor(){
@@ -46,7 +46,7 @@ export class FileUserClientRepository extends UserRepository {
             FileUserClientRepository._writeFile(users);
             return body;
         } catch (error) {
-            throw new UserCreateException('Failed to create user.', UserCreateErrorCode.USER_CREATE_FAILED);
+            throw new UserCreateException('Failed to create user.', UserCreateErrorCode.CREATE_FAILED);
         }
     }
 
@@ -55,13 +55,13 @@ export class FileUserClientRepository extends UserRepository {
             const users = FileUserClientRepository._readFile();
             const index = users.findIndex(user => user.id === id);
             if (index === -1) {
-                throw new UserCreateException('User not found.', UserCreateErrorCode.USER_NOT_FOUND);
+                throw new UserCreateException('User not found.', UserCreateErrorCode.NOT_FOUND);
             }
             const [deletedUser] = users.splice(index, 1);
             FileUserClientRepository._writeFile(users);
             return deletedUser;
         } catch (error) {
-            throw new UserCreateException('Failed to delete user.', UserCreateErrorCode.USER_DELETE_FAILED);
+            throw new UserCreateException('Failed to delete user.', UserCreateErrorCode.DELETE_FAILED);
         }
     }
 
@@ -69,7 +69,7 @@ export class FileUserClientRepository extends UserRepository {
         try {
             return FileUserClientRepository._readFile();
         } catch (error) {
-            throw new UserCreateException('Failed to find users.', UserCreateErrorCode.USER_FETCH_FAILED);
+            throw new UserCreateException('Failed to find users.', UserCreateErrorCode.FETCH_FAILED);
         }
     }
 
@@ -78,13 +78,13 @@ export class FileUserClientRepository extends UserRepository {
             const users = FileUserClientRepository._readFile();
             const index = users.findIndex(user => user.id === id);
             if (index === -1) {
-                throw new UserCreateException('User not found.', UserCreateErrorCode.USER_NOT_FOUND);
+                throw new UserCreateException('User not found.', UserCreateErrorCode.NOT_FOUND);
             }
             users[index] = { ...users[index], ...body };
             FileUserClientRepository._writeFile(users);
             return users[index];
         } catch (error) {
-            throw new UserCreateException('Failed to update user.', UserCreateErrorCode.USER_UPDATE_FAILED);
+            throw new UserCreateException('Failed to update user.', UserCreateErrorCode.UPDATE_FAILED);
         }
     }
 }

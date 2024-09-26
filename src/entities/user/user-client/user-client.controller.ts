@@ -1,11 +1,12 @@
-import { UserController } from "../user.controller";
 import { FileUserClientRepository } from "./repositories/file-user-client.repository";
 import { UserClientList } from './repositories/in-memory-user-client.repository';
 import { UserCreateException, UserCreateErrorCode } from '../exceptions/user-create.exception';
 import { UserClient } from './user-client';
+import { Controller } from "../../controller";
+import { CreateUserDto } from "../dto/create-user.dto";
 
 
-export class UserClientController extends UserController {
+export class UserClientController extends Controller<UserClient, CreateUserDto> {
     private userClientList: UserClientList;
     private userClientFileList: FileUserClientRepository;
     
@@ -14,6 +15,11 @@ export class UserClientController extends UserController {
         this.userClientList = UserClientList.instance;
         this.userClientFileList = FileUserClientRepository.instance;
     }
+
+    protected get dto(): new () => CreateUserDto {
+        return CreateUserDto;
+    }
+    
 
     async handleGetAll(): Promise<UserClient[]> {
         try {
@@ -27,7 +33,7 @@ export class UserClientController extends UserController {
             if (error instanceof UserCreateException) {
                 throw error; 
             }
-            throw new UserCreateException('Failed to get all users.', UserCreateErrorCode.USER_FETCH_FAILED);
+            throw new UserCreateException('Failed to get all users.', UserCreateErrorCode.FETCH_FAILED);
         }
     }
 
@@ -38,7 +44,7 @@ export class UserClientController extends UserController {
             if (error instanceof UserCreateException) {
                 throw error; 
             }
-            throw new UserCreateException('Failed to update user.', UserCreateErrorCode.USER_UPDATE_FAILED);
+            throw new UserCreateException('Failed to update user.', UserCreateErrorCode.UPDATE_FAILED);
         }
     }
 
@@ -49,7 +55,7 @@ export class UserClientController extends UserController {
             if (error instanceof UserCreateException) {
                 throw error; 
             }
-            throw new UserCreateException('Failed to delete user.', UserCreateErrorCode.USER_DELETE_FAILED);
+            throw new UserCreateException('Failed to delete user.', UserCreateErrorCode.DELETE_FAILED);
         }
     }
 
@@ -61,7 +67,7 @@ export class UserClientController extends UserController {
             if (error instanceof UserCreateException) {
                 throw error; 
             }
-            throw new UserCreateException('Failed to create user.', UserCreateErrorCode.USER_CREATE_FAILED);
+            throw new UserCreateException('Failed to create user.', UserCreateErrorCode.CREATE_FAILED);
         }
     }
 }

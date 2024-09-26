@@ -1,0 +1,16 @@
+[
+  {
+    "id": "6497e884-9184-49a4-847f-ab7a3efb3221",
+    "category": "Beleza"
+  },
+  {
+    "id": "11a9115d-b03b-4696-9ecc-f102d737754a",
+    "category": "Beleza",
+    "parentId": "6497e884-9184-49a4-847f-ab7a3efb3221"
+  },
+  {
+    "id": "bcee35aa-cafa-494c-a607-a27dfbf527a7",
+    "category": "Beleza 2",
+    "parentId": "11a9115d-b03b-4696-9ecc-f102d737754a"
+  }
+]

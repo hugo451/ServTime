@@ -1,7 +1,7 @@
-import { UserRepository } from "../../user.repository";
-import { UserClient } from "../user-client";
+import { Repository } from "../../../repository";
+import { UserClient } from "../user-provider";
 
-export class UserClientList extends UserRepository {
+export class UserClientList extends Repository<UserClient> {
     private static _instance: UserClientList;
     private list: UserClient[];
     
