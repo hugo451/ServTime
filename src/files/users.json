@@ -8,5 +8,14 @@
     "phone": "string",
     "mail": "mail@teste.com",
     "teste": "teste"
+  },
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440000",
+    "username": "user",
+    "password": "passWord12",
+    "name": "name",
+    "adress": "adress",
+    "phone": "phone",
+    "mail": "mail@mail.com"
   }
 ]
