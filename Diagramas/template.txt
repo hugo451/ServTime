@@ -1,0 +1,49 @@
+@startuml
+!define T Object
+!define U Object
+
+class CRUDException
+class ServerErrorCode
+
+abstract class Exception<T> extends Error {
+}
+
+class CRUDException extends Exception<CRUDErrorCode> {
+}
+
+class ServerException extends Exception<ServerErrorCode> {
+}
+
+CRUDException --> CRUDErrorCode
+ServerException --> ServerErrorCode
+
+
+abstract class Controller<T, U extends Object> {}
+
+abstract class Repository<T>{}
+
+interface User {}
+
+interface UserClient extends User {}
+
+class CreateUserDto {}
+
+class UserClientController extends Controller {}
+
+class FileUserClientRepository extends Repository {}
+
+class UserClientList extends Repository{}
+
+class UserCreateException extends Exception{}
+
+interface Service {}
+
+class ServiceController extends Controller{}
+
+class FileServiceRepository extends Repository{}
+
+class ServiceList extends Repository{}
+
+class CreateServiceDto{}
+
+@enduml
