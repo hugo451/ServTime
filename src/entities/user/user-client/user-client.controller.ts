@@ -27,6 +27,10 @@ export class UserClientController extends Controller<
         return CreateUserDto;
     }
 
+    protected get entity(): string {
+        return 'userClient';
+    }
+
     async handleGetAll(): Promise<UserClient[]> {
         try {
             let list = this.memoryRepository.findAll();

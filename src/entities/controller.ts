@@ -3,6 +3,10 @@ import { validate } from 'class-validator';
 import { plainToInstance } from 'class-transformer';
 import { CRUDErrorCode, CRUDException } from './exceptions/crud-exception';
 import { ServerErrorCode } from './exceptions/server-exception';
+import { Log } from './log/log';
+import { randomUUID } from 'crypto';
+import { LogService } from './log/log.service';
+import { HtmlLogService } from './log/templates/htmlLog';
 
 /**
  * Classe abstrata `Controller` que define a estrutura básica para controladores genéricos.
@@ -13,7 +17,22 @@ import { ServerErrorCode } from './exceptions/server-exception';
  */
 export abstract class Controller<T, U extends Object> {
     protected abstract get dto(): new () => U;
+    protected abstract get entity(): string;
+    private htmlLogService = HtmlLogService.instance;
 
+    async getRelatory(request: Request, response: Response): Promise<Response> {
+        try {
+            const { method } = request.body;
+            const result = await this.htmlLogService.generateRelatory(
+                this.entity,
+            );
+            console.log(result);
+            //return response.status(200).json(result);
+            return response.status(200).send(result);
+        } catch (error) {
+            return this.catchError(response, error as Error);
+        }
+    }
     async create(request: Request, response: Response): Promise<Response> {
         try {
             // Validate user creation data
@@ -31,6 +50,16 @@ export abstract class Controller<T, U extends Object> {
             return response.status(201).json(result);
         } catch (error) {
             return this.catchError(response, error as Error);
+        } finally {
+            const log: Log = {
+                id: randomUUID(),
+                event: 'create',
+                oldValue: '',
+                newValue: JSON.stringify(request.body),
+                timestamp: new Date(),
+                entity: this.entity,
+            };
+            this.htmlLogService.log(log);
         }
     }
 
@@ -40,6 +69,16 @@ export abstract class Controller<T, U extends Object> {
             return response.status(200).json(users);
         } catch (error) {
             return this.catchError(response, error as Error);
+        } finally {
+            const log: Log = {
+                id: randomUUID(),
+                event: 'getAll',
+                oldValue: '',
+                newValue: JSON.stringify(request.body),
+                timestamp: new Date(),
+                entity: this.entity,
+            };
+            this.htmlLogService.log(log);
         }
     }
 
@@ -50,6 +89,16 @@ export abstract class Controller<T, U extends Object> {
             return response.status(200).json(updatedUser);
         } catch (error) {
             return this.catchError(response, error as Error);
+        } finally {
+            const log: Log = {
+                id: randomUUID(),
+                event: 'update',
+                oldValue: '',
+                newValue: JSON.stringify(request.body),
+                timestamp: new Date(),
+                entity: this.entity,
+            };
+            this.htmlLogService.log(log);
         }
     }
 
@@ -60,6 +109,16 @@ export abstract class Controller<T, U extends Object> {
             return response.status(200).json({ success: result });
         } catch (error) {
             return this.catchError(response, error as Error);
+        } finally {
+            const log: Log = {
+                id: randomUUID(),
+                event: 'delete',
+                oldValue: '',
+                newValue: JSON.stringify(request.body),
+                timestamp: new Date(),
+                entity: this.entity,
+            };
+            this.htmlLogService.log(log);
         }
     }
 

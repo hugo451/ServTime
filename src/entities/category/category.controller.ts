@@ -24,6 +24,10 @@ export class CategoryController extends Controller<
         this.categoryList.setList(list);
     }
 
+    protected get entity(): string {
+        return 'category';
+    }
+
     protected get dto(): new () => CreateCategoryDto {
         return CreateCategoryDto;
     }
