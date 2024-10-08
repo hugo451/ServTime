@@ -1,8 +1,6 @@
 import { IsString, IsUUID, Length, Matches } from 'class-validator';
 import { UUID } from 'crypto';
 
-
-
 export class CreateServiceDto {
     @IsUUID()
     serviceid!: UUID;

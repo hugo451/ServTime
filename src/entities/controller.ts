@@ -19,11 +19,13 @@ export abstract class Controller<T, U extends Object> {
     protected abstract get dto(): new () => U;
     protected abstract get entity(): string;
     private htmlLogService = HtmlLogService.instance;
-    
+
     async getRelatory(request: Request, response: Response): Promise<Response> {
         try {
-            const {method} = request.body;
-            const result = await this.htmlLogService.generateRelatory(this.entity);
+            const { method } = request.body;
+            const result = await this.htmlLogService.generateRelatory(
+                this.entity,
+            );
             console.log(result);
             //return response.status(200).json(result);
             return response.status(200).send(result);
@@ -120,28 +122,35 @@ export abstract class Controller<T, U extends Object> {
         }
     }
 
-    private async validateCreation(body: unknown): Promise<CRUDException | null> {
+    private async validateCreation(
+        body: unknown,
+    ): Promise<CRUDException | null> {
         const obj = plainToInstance(this.dto, body);
         const errors = await validate(obj);
 
         if (errors.length > 0) {
-            const errorMessages = errors.map(error => Object.values(error.constraints || {})).flat();
-            return new CRUDException(`Validation failed: ${errorMessages.join(', ')}`, CRUDErrorCode.VALIDATION_FAILED);
+            const errorMessages = errors
+                .map((error) => Object.values(error.constraints || {}))
+                .flat();
+            return new CRUDException(
+                `Validation failed: ${errorMessages.join(', ')}`,
+                CRUDErrorCode.VALIDATION_FAILED,
+            );
         }
 
         return null;
     }
 
-    private catchError(response: Response, error: Error){
+    private catchError(response: Response, error: Error) {
         if (error instanceof CRUDException) {
             return response.status(400).json({
                 message: error.message,
-                code: error.code
+                code: error.code,
             });
         }
         return response.status(500).json({
             message: 'An internal server error occurred.',
-            code: ServerErrorCode.INTERNAL_SERVER_ERROR
+            code: ServerErrorCode.INTERNAL_SERVER_ERROR,
         });
     }
 

@@ -1,11 +1,11 @@
-import { Exception } from "../../exceptions/exception";
+import { Exception } from '../../exceptions/exception';
 
 export class ServiceCreateException extends Exception<ServiceCreateErrorCode> {
     public readonly code!: ServiceCreateErrorCode;
-    
+
     constructor(message: string, code: ServiceCreateErrorCode) {
         super('ServiceCreateException', message, code);
-        Object.setPrototypeOf(this, ServiceCreateException.prototype); 
+        Object.setPrototypeOf(this, ServiceCreateException.prototype);
     }
 }
 

@@ -1,5 +1,5 @@
-import { UUID } from "crypto";
-import { Category } from "../category/category";
+import { UUID } from 'crypto';
+import { Category } from '../category/category';
 
 export interface Service {
     id: UUID;

@@ -1,11 +1,13 @@
-import { Controller } from "../controller";
-import { FileServiceRepository } from "./repositories/file-service.repository";
+import { Controller } from '../controller';
+import { FileServiceRepository } from './repositories/file-service.repository';
 import { ServiceList } from './repositories/in-memory-service.repository';
-import { ServiceCreateException, ServiceCreateErrorCode } from './exceptions/service-create.exception';
+import {
+    ServiceCreateException,
+    ServiceCreateErrorCode,
+} from './exceptions/service-create.exception';
 import { Service } from './service';
-import { CreateServiceDto } from "./dto/create-service.dto";
-import { CategoryController } from "../category/category.controller";
-
+import { CreateServiceDto } from './dto/create-service.dto';
+import { CategoryController } from '../category/category.controller';
 
 export class ServiceController extends Controller<Service, CreateServiceDto> {
     private serviceList: ServiceList;
@@ -33,18 +35,25 @@ export class ServiceController extends Controller<Service, CreateServiceDto> {
     async handleGetAll(): Promise<Service[]> {
         try {
             const list = this.serviceList.findAll();
-            const servicesWithCategory = Promise.all(list.map(async service => { 
-                const category = await this.categoryController.findById(service.categoryId);
-                service.category = category;
-                return service;
-            }));
+            const servicesWithCategory = Promise.all(
+                list.map(async (service) => {
+                    const category = await this.categoryController.findById(
+                        service.categoryId,
+                    );
+                    service.category = category;
+                    return service;
+                }),
+            );
 
             return servicesWithCategory;
         } catch (error) {
             if (error instanceof ServiceCreateException) {
                 throw error;
             }
-            throw new ServiceCreateException('Failed to get all services.', ServiceCreateErrorCode.SERVICE_FETCH_FAILED);
+            throw new ServiceCreateException(
+                'Failed to get all services.',
+                ServiceCreateErrorCode.SERVICE_FETCH_FAILED,
+            );
         }
     }
 
@@ -55,7 +64,10 @@ export class ServiceController extends Controller<Service, CreateServiceDto> {
             if (error instanceof ServiceCreateException) {
                 throw error;
             }
-            throw new ServiceCreateException('Failed to update service.', ServiceCreateErrorCode.SERVICE_UPDATE_FAILED);
+            throw new ServiceCreateException(
+                'Failed to update service.',
+                ServiceCreateErrorCode.SERVICE_UPDATE_FAILED,
+            );
         }
     }
 
@@ -66,7 +78,10 @@ export class ServiceController extends Controller<Service, CreateServiceDto> {
             if (error instanceof ServiceCreateException) {
                 throw error;
             }
-            throw new ServiceCreateException('Failed to delete service.', ServiceCreateErrorCode.SERVICE_DELETE_FAILED);
+            throw new ServiceCreateException(
+                'Failed to delete service.',
+                ServiceCreateErrorCode.SERVICE_DELETE_FAILED,
+            );
         }
     }
 
@@ -78,7 +93,10 @@ export class ServiceController extends Controller<Service, CreateServiceDto> {
             if (error instanceof ServiceCreateException) {
                 throw error;
             }
-            throw new ServiceCreateException('Failed to create service.', ServiceCreateErrorCode.SERVICE_CREATE_FAILED);
+            throw new ServiceCreateException(
+                'Failed to create service.',
+                ServiceCreateErrorCode.SERVICE_CREATE_FAILED,
+            );
         }
     }
 }
