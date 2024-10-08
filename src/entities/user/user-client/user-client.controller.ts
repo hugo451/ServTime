@@ -1,4 +1,4 @@
-import { UserClientFactory } from '../factories/user-client.factory';
+import { UserClientFactory } from './repositories/factory/user-client-repository.factory';
 import { UserClientList } from './repositories/in-memory-user-client.repository';
 import { FileUserClientRepository } from './repositories/file-user-client.repository';
 import {
@@ -36,7 +36,7 @@ export class UserClientController extends Controller<
             let list = this.memoryRepository.findAll();
             if (list.length === 0) {
                 list = this.fileRepository.findAll();
-                this.memoryRepository.setList(list);
+                this.memoryRepository.init(list);
             }
             return list;
         } catch (error) {

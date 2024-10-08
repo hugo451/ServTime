@@ -17,10 +17,11 @@ export class UserClientList extends Repository<UserClient> {
         return UserClientList._instance;
     }
 
-    public setList(list: UserClient[]): void {
+    init(data: UserClient[]): UserClient[] {
         if (this.list.length === 0) {
-            this.list = list;
+            this.list = data;
         }
+        return Array.from(this.list) as UserClient[];
     }
 
     create(body: UserClient): UserClient {

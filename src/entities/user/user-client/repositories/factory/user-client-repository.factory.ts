@@ -1,5 +1,5 @@
-import { UserClientList } from '../user-client/repositories/in-memory-user-client.repository';
-import { FileUserClientRepository } from '../user-client/repositories/file-user-client.repository';
+import { UserClientList } from '../in-memory-user-client.repository';
+import { FileUserClientRepository } from '../file-user-client.repository';
 
 export class UserClientFactory {
     static createRepositories() {

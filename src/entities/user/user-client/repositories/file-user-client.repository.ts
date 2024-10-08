@@ -54,6 +54,13 @@ export class FileUserClientRepository extends Repository<UserClient> {
         }
     }
 
+    init(data: UserClient[]): UserClient[] {
+        if (this.findAll().length === 0) {
+            FileUserClientRepository._writeFile(data);
+        }
+        return data;
+    }
+
     create(body: UserClient): UserClient {
         try {
             const users = FileUserClientRepository._readFile();
