@@ -22,6 +22,10 @@ export class ServiceController extends Controller<Service, CreateServiceDto> {
         this.serviceList.setList(list);
     }
 
+    protected get entity(): string {
+        return 'service';
+    }
+
     protected get dto(): new () => CreateServiceDto {
         return CreateServiceDto;
     }
