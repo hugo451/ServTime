@@ -1,19 +1,21 @@
 import { FileUserClientRepository } from "./repositories/file-user-client.repository";
 import { UserClientList } from './repositories/in-memory-user-client.repository';
 import { UserCreateException, UserCreateErrorCode } from '../exceptions/user-create.exception';
-import { UserClient } from './user-provider';
+import { UserProvider } from './user-provider';
 import { Controller } from "../../controller";
 import { CreateUserDto } from "../dto/create-user.dto";
+import { UserProviderFactory } from "../factories/user-provider.factory";
 
 
-export class UserClientController extends Controller<UserClient, CreateUserDto> {
-    private userClientList: UserClientList;
-    private userClientFileList: FileUserClientRepository;
+export class UserClientController extends Controller<UserProvider, CreateUserDto> {
+    private memoryRepository: UserClientList;
+    private fileRepository: FileUserClientRepository;
     
     constructor(){
         super();
-        this.userClientList = UserClientList.instance;
-        this.userClientFileList = FileUserClientRepository.instance;
+        const repositories = UserProviderFactory.createRepositories();
+        this.memoryRepository = repositories.memory;
+        this.fileRepository = repositories.file;
     }
 
     protected get dto(): new () => CreateUserDto {
@@ -21,12 +23,12 @@ export class UserClientController extends Controller<UserClient, CreateUserDto> 
     }
     
 
-    async handleGetAll(): Promise<UserClient[]> {
+    async handleGetAll(): Promise<UserProvider[]> {
         try {
-            let list = this.userClientList.findAll();
+            let list = this.memoryRepository.findAll();
             if (list.length === 0) {
-                list = this.userClientFileList.findAll();
-                this.userClientList.setList(list);
+                list = this.fileRepository.findAll();
+                this.memoryRepository.setList(list);
             }
             return list;
         } catch (error) {
@@ -37,9 +39,9 @@ export class UserClientController extends Controller<UserClient, CreateUserDto> 
         }
     }
 
-    async handleUpdate(user: UserClient): Promise<UserClient> {
+    async handleUpdate(user: UserProvider): Promise<UserProvider> {
         try {
-            return this.userClientFileList.update(user.id, user);
+            return this.fileRepository.update(user.id, user);
         } catch (error) {
             if (error instanceof UserCreateException) {
                 throw error; 
@@ -48,9 +50,9 @@ export class UserClientController extends Controller<UserClient, CreateUserDto> 
         }
     }
 
-    async handleDelete(id: string): Promise<UserClient> {
+    async handleDelete(id: string): Promise<UserProvider> {
         try {
-            return this.userClientFileList.delete(id);
+            return this.fileRepository.delete(id);
         } catch (error) {
             if (error instanceof UserCreateException) {
                 throw error; 
@@ -59,10 +61,10 @@ export class UserClientController extends Controller<UserClient, CreateUserDto> 
         }
     }
 
-    async handleCreate(user: UserClient): Promise<UserClient> {
+    async handleCreate(user: UserProvider): Promise<UserProvider> {
         try {
-            this.userClientList.create(user);
-            return this.userClientFileList.create(user);
+            this.memoryRepository.create(user);
+            return this.fileRepository.create(user);
         } catch (error) {
             if (error instanceof UserCreateException) {
                 throw error; 
