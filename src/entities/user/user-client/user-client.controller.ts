@@ -16,6 +16,10 @@ export class UserClientController extends Controller<UserClient, CreateUserDto> 
         this.userClientFileList = FileUserClientRepository.instance;
     }
 
+    protected get entity(): string {
+        return 'userClient';
+    }
+
     protected get dto(): new () => CreateUserDto {
         return CreateUserDto;
     }

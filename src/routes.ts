@@ -20,5 +20,6 @@ router.post('/service', (req, res) => serviceController.create(req, res));
 const categoryController = new CategoryController();
 router.get('/category', (req, res) => categoryController.getAll(req, res));
 router.post('/category', (req, res) => categoryController.create(req, res));
+router.get('/category/log', (req, res) => categoryController.getRelatory(req, res));    
 
 export { router };
