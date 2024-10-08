@@ -1,15 +1,14 @@
-import { CRUDErrorCode } from "../../exceptions/crud-exception";
-import { Exception } from "../../exceptions/exception";
+import { CRUDErrorCode } from '../../exceptions/crud-exception';
+import { Exception } from '../../exceptions/exception';
 
 export class UserCreateException extends Exception<UserCreateErrorCode> {
     public readonly code!: UserCreateErrorCode;
-    
+
     constructor(message: string, code: UserCreateErrorCode) {
         super('UserCreateException', message, code);
-        Object.setPrototypeOf(this, UserCreateException.prototype); 
+        Object.setPrototypeOf(this, UserCreateException.prototype);
     }
 }
-
 
 export enum UserCreateErrorCode {
     FILE_READ_ERROR = 1001,

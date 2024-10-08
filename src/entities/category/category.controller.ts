@@ -1,13 +1,17 @@
-import { Controller } from "../controller";
+import { Controller } from '../controller';
 import { Category } from './category';
-import { CreateCategoryDto } from "./dto/create-category.dto";
-import { CategoryCreateErrorCode, CategoryCreateException } from "./exceptions/category-create.exception";
-import { FileCategoryRepository } from "./repositories/file-category.repository";
-import { CategoryList } from "./repositories/in-memory-category.repository";
+import { CreateCategoryDto } from './dto/create-category.dto';
+import {
+    CategoryCreateErrorCode,
+    CategoryCreateException,
+} from './exceptions/category-create.exception';
+import { FileCategoryRepository } from './repositories/file-category.repository';
+import { CategoryList } from './repositories/in-memory-category.repository';
 
-
-
-export class CategoryController extends Controller<Category, CreateCategoryDto> {
+export class CategoryController extends Controller<
+    Category,
+    CreateCategoryDto
+> {
     private categoryList: CategoryList;
     private categoryFileList: FileCategoryRepository;
 
@@ -29,7 +33,7 @@ export class CategoryController extends Controller<Category, CreateCategoryDto> 
             const list = this.categoryList.findAll();
 
             const categories = await Promise.all(
-                list.map(async category => { 
+                list.map(async (category) => {
                     if (category.parentId) {
                         const parent = await this.findById(category.parentId);
                         if (parent) {
@@ -37,17 +41,19 @@ export class CategoryController extends Controller<Category, CreateCategoryDto> 
                         }
                     }
                     return category;
-                })
+                }),
             );
             return categories;
         } catch (error) {
             if (error instanceof CategoryCreateException) {
                 throw error;
             }
-            throw new CategoryCreateException('Failed to get all categories.', CategoryCreateErrorCode.FETCH_FAILED);
+            throw new CategoryCreateException(
+                'Failed to get all categories.',
+                CategoryCreateErrorCode.FETCH_FAILED,
+            );
         }
     }
-    
 
     async handleUpdate(category: Category): Promise<Category> {
         try {
@@ -56,7 +62,10 @@ export class CategoryController extends Controller<Category, CreateCategoryDto> 
             if (error instanceof CategoryCreateException) {
                 throw error;
             }
-            throw new CategoryCreateException('Failed to update category.', CategoryCreateErrorCode.UPDATE_FAILED);
+            throw new CategoryCreateException(
+                'Failed to update category.',
+                CategoryCreateErrorCode.UPDATE_FAILED,
+            );
         }
     }
 
@@ -67,7 +76,10 @@ export class CategoryController extends Controller<Category, CreateCategoryDto> 
             if (error instanceof CategoryCreateException) {
                 throw error;
             }
-            throw new CategoryCreateException('Failed to delete category.', CategoryCreateErrorCode.DELETE_FAILED);
+            throw new CategoryCreateException(
+                'Failed to delete category.',
+                CategoryCreateErrorCode.DELETE_FAILED,
+            );
         }
     }
 
@@ -75,8 +87,10 @@ export class CategoryController extends Controller<Category, CreateCategoryDto> 
         try {
             if (category.parentId) {
                 this.findById(category.parentId)
-                    .then(parent => category.parent = parent)
-                    .catch(error => { throw error });
+                    .then((parent) => (category.parent = parent))
+                    .catch((error) => {
+                        throw error;
+                    });
             }
             this.categoryList.create(category);
             return this.categoryFileList.create(category);
@@ -84,7 +98,10 @@ export class CategoryController extends Controller<Category, CreateCategoryDto> 
             if (error instanceof CategoryCreateException) {
                 throw error;
             }
-            throw new CategoryCreateException('Failed to create category.', CategoryCreateErrorCode.CREATE_FAILED);
+            throw new CategoryCreateException(
+                'Failed to create category.',
+                CategoryCreateErrorCode.CREATE_FAILED,
+            );
         }
     }
 
@@ -93,6 +110,9 @@ export class CategoryController extends Controller<Category, CreateCategoryDto> 
         if (category) {
             return category;
         }
-        throw new CategoryCreateException('This Category does not exists', CategoryCreateErrorCode.NOT_FOUND);
+        throw new CategoryCreateException(
+            'This Category does not exists',
+            CategoryCreateErrorCode.NOT_FOUND,
+        );
     }
 }

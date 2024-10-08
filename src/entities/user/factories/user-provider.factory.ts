@@ -2,10 +2,10 @@ import { FileUserClientRepository } from '../user-provider/repositories/file-use
 import { UserClientList } from '../user-provider/repositories/in-memory-user-client.repository';
 
 export class UserProviderFactory {
-  static createRepositories() {
-    return {
-      memory: UserClientList.instance,
-      file: FileUserClientRepository.instance,
+    static createRepositories() {
+        return {
+            memory: UserClientList.instance,
+            file: FileUserClientRepository.instance,
+        };
     }
-  }
 }

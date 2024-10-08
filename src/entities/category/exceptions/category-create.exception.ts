@@ -1,14 +1,13 @@
-import { Exception } from "../../exceptions/exception";
+import { Exception } from '../../exceptions/exception';
 
 export class CategoryCreateException extends Exception<CategoryCreateErrorCode> {
     public readonly code!: CategoryCreateErrorCode;
-    
+
     constructor(message: string, code: CategoryCreateErrorCode) {
         super('CategoryCreateException', message, code);
-        Object.setPrototypeOf(this, CategoryCreateException.prototype); 
+        Object.setPrototypeOf(this, CategoryCreateException.prototype);
     }
 }
-
 
 export enum CategoryCreateErrorCode {
     FILE_READ_ERROR = 1001,

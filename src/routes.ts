@@ -1,12 +1,12 @@
-import { Router } from "express";
-import { UserClientController } from "./entities/user/user-client/user-client.controller";
-import { ServiceController } from "./entities/service/service.controller";
-import { CategoryController } from "./entities/category/category.controller";
+import { Router } from 'express';
+import { UserClientController } from './entities/user/user-client/user-client.controller';
+import { ServiceController } from './entities/service/service.controller';
+import { CategoryController } from './entities/category/category.controller';
 
 const router = Router();
 
 router.get('/', (req, res) => {
-    res.send('Hello World!')
+    res.send('Hello World!');
 });
 
 const userClientController = new UserClientController();

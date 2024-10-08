@@ -1,11 +1,11 @@
 export class CRUDException extends Error {
     public readonly code: CRUDErrorCode;
-    
+
     constructor(message: string, code: CRUDErrorCode) {
         super(message);
         this.code = code;
         this.name = 'CRUDException';
-        Object.setPrototypeOf(this, CRUDException.prototype); 
+        Object.setPrototypeOf(this, CRUDException.prototype);
     }
 }
 
