@@ -5,7 +5,7 @@ export class UserClientFactory {
     static createRepositories() {
         return {
             memory: UserClientList.instance,
-            file: FileUserClientRepository.instance
+            file: FileUserClientRepository.instance,
         };
     }
 
