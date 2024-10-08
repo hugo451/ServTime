@@ -1,11 +1,11 @@
 import { Repository } from "../../../repository";
-import { UserClient } from "../user-provider";
+import { UserProvider } from "../user-provider";
 
-export class UserClientList extends Repository<UserClient> {
+export class UserClientList extends Repository<UserProvider> {
     private static _instance: UserClientList;
-    private list: UserClient[];
+    private list: UserProvider[];
     
-    private constructor(list?: UserClient[]) {
+    private constructor(list?: UserProvider[]) {
         super();
         this.list = list || [];
     }
@@ -17,26 +17,26 @@ export class UserClientList extends Repository<UserClient> {
         return UserClientList._instance;
     }
 
-    public setList(list: UserClient[]): void{
+    public setList(list: UserProvider[]): void{
         if(this.list.length === 0){
             this.list = list;
         }
     }
     
-    create(body: UserClient): UserClient {
+    create(body: UserProvider): UserProvider {
         this.list.push(body);
         return body;
     }
 
-    delete(id: string): UserClient {
+    delete(id: string): UserProvider {
         throw new Error("Method not implemented.");
     }
 
-    findAll(): UserClient[] {
-        return Array.from(this.list) as UserClient[];
+    findAll(): UserProvider[] {
+        return Array.from(this.list) as UserProvider[];
     }
 
-    update(id: string, body: UserClient): UserClient {
+    update(id: string, body: UserProvider): UserProvider {
         throw new Error("Method not implemented.");
     }
 }

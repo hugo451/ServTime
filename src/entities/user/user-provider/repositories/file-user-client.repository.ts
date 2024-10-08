@@ -1,10 +1,10 @@
 import * as path from 'path';
 import * as fs from 'fs';
 import { UserCreateException, UserCreateErrorCode } from '../../exceptions/user-create.exception';
-import { UserClient } from '../user-provider';
+import { UserProvider } from '../user-provider';
 import { Repository } from '../../../repository';
 
-export class FileUserClientRepository extends Repository<UserClient> {
+export class FileUserClientRepository extends Repository<UserProvider> {
     private static _path = path.join(__dirname, '../../../../files/users.json');
     private static _instance: FileUserClientRepository;
 
@@ -19,7 +19,7 @@ export class FileUserClientRepository extends Repository<UserClient> {
         return FileUserClientRepository._instance;
     }
 
-    private static _readFile(): UserClient[] {
+    private static _readFile(): UserProvider[] {
         try {
             if (!fs.existsSync(FileUserClientRepository._path)) {
                 return [];
@@ -31,7 +31,7 @@ export class FileUserClientRepository extends Repository<UserClient> {
         }
     }
 
-    private static _writeFile(users: UserClient[]): void {
+    private static _writeFile(users: UserProvider[]): void {
         try {
             fs.writeFileSync(FileUserClientRepository._path, JSON.stringify(users, null, 2));
         } catch (error) {
@@ -39,7 +39,7 @@ export class FileUserClientRepository extends Repository<UserClient> {
         }
     }
 
-    create(body: UserClient): UserClient {
+    create(body: UserProvider): UserProvider {
         try {
             const users = FileUserClientRepository._readFile();
             users.push(body);
@@ -50,7 +50,7 @@ export class FileUserClientRepository extends Repository<UserClient> {
         }
     }
 
-    delete(id: string): UserClient {
+    delete(id: string): UserProvider {
         try {
             const users = FileUserClientRepository._readFile();
             const index = users.findIndex(user => user.id === id);
@@ -65,7 +65,7 @@ export class FileUserClientRepository extends Repository<UserClient> {
         }
     }
 
-    findAll(): UserClient[] {
+    findAll(): UserProvider[] {
         try {
             return FileUserClientRepository._readFile();
         } catch (error) {
@@ -73,7 +73,7 @@ export class FileUserClientRepository extends Repository<UserClient> {
         }
     }
 
-    update(id: string, body: UserClient): UserClient {
+    update(id: string, body: UserProvider): UserProvider {
         try {
             const users = FileUserClientRepository._readFile();
             const index = users.findIndex(user => user.id === id);
