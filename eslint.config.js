@@ -1,31 +1,33 @@
-import typescriptEslintPlugin from '@typescript-eslint/eslint-plugin';
-import typescriptParser from '@typescript-eslint/parser';
-import nodePlugin from 'eslint-plugin-node';
+import js from '@eslint/js';
+import globals from 'globals';
+import tseslint from 'typescript-eslint';
 
-export default [
+export default tseslint.config(
+    { ignores: ['dist'] },
     {
-        ignores: ['node_modules/**', 'dist/**', '*.js', '*.d.ts'],
-    },
-    {
-        files: ['**/*.ts'],
+        extends: [js.configs.recommended, ...tseslint.configs.recommended],
+        files: ['**/*.{ts,js}'],
         languageOptions: {
-            ecmaVersion: 'latest',
-            sourceType: 'module',
-            parser: typescriptParser,
-            parserOptions: {
-                project: './tsconfig.json',
-            },
-        },
-        plugins: {
-            '@typescript-eslint': typescriptEslintPlugin,
-            node: nodePlugin,
+            ecmaVersion: 2020,
+            globals: globals.node, // Alterando para o ambiente Node.js
         },
         rules: {
-            '@typescript-eslint/no-unused-vars': 'error',
-            'node/no-unsupported-features/es-syntax': [
+            '@typescript-eslint/no-unused-vars': [
                 'error',
-                { ignores: ['modules'] },
+                {
+                    // argsIgnorePattern: '^_',
+                    // varsIgnorePattern: '^_', // Ignorando variáveis que começam com _
+                    caughtErrorsIgnorePattern: 'error', // Ignorar erros em blocos catch começando com _
+                },
             ],
         },
+        ignores: [
+            '**/*.test.{js,ts}',
+            '**/*.test-*.ts',
+            '**/dist/**',
+            '**/templates/**',
+            'coverage/**',
+            'node_modules/',
+        ],
     },
-];
+);
