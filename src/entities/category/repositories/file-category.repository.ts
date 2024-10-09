@@ -54,6 +54,13 @@ export class FileCategoryRepository extends Repository<Category> {
         }
     }
 
+    init(data: Category[]): Category[] {
+        if (this.findAll().length === 0) {
+            FileCategoryRepository._writeFile(data);
+        }
+        return data;
+    }
+
     create(body: Category): Category {
         try {
             const categorys = FileCategoryRepository._readFile();

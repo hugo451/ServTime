@@ -1,4 +1,4 @@
-import { IsOptional, IsString, IsUUID, Length, Matches } from 'class-validator';
+import { IsOptional, IsString, IsUUID, Length } from 'class-validator';
 import { UUID } from 'crypto';
 
 export class CreateCategoryDto {

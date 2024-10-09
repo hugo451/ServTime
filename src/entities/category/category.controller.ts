@@ -5,6 +5,7 @@ import {
     CategoryCreateErrorCode,
     CategoryCreateException,
 } from './exceptions/category-create.exception';
+import { CategoryFactory } from './repositories/factory/category.factory';
 import { FileCategoryRepository } from './repositories/file-category.repository';
 import { CategoryList } from './repositories/in-memory-category.repository';
 
@@ -12,16 +13,17 @@ export class CategoryController extends Controller<
     Category,
     CreateCategoryDto
 > {
-    private categoryList: CategoryList;
-    private categoryFileList: FileCategoryRepository;
+    private memoryRepository: CategoryList;
+    private fileRepository: FileCategoryRepository;
 
     constructor() {
         super();
-        this.categoryFileList = FileCategoryRepository.instance;
-        this.categoryList = CategoryList.instance;
+        const repositories = CategoryFactory.createRepositories();
+        this.fileRepository = repositories.file;
+        this.memoryRepository = repositories.memory;
 
-        const list = this.categoryFileList.findAll();
-        this.categoryList.setList(list);
+        const list = this.fileRepository.findAll();
+        this.memoryRepository.init(list);
     }
 
     protected get entity(): string {
@@ -34,7 +36,7 @@ export class CategoryController extends Controller<
 
     async handleGetAll(): Promise<Category[]> {
         try {
-            const list = this.categoryList.findAll();
+            const list = this.memoryRepository.findAll();
 
             const categories = await Promise.all(
                 list.map(async (category) => {
@@ -61,7 +63,7 @@ export class CategoryController extends Controller<
 
     async handleUpdate(category: Category): Promise<Category> {
         try {
-            return this.categoryFileList.update(category.id, category);
+            return this.fileRepository.update(category.id, category);
         } catch (error) {
             if (error instanceof CategoryCreateException) {
                 throw error;
@@ -75,7 +77,7 @@ export class CategoryController extends Controller<
 
     async handleDelete(id: string): Promise<Category> {
         try {
-            return this.categoryFileList.delete(id);
+            return this.fileRepository.delete(id);
         } catch (error) {
             if (error instanceof CategoryCreateException) {
                 throw error;
@@ -96,8 +98,8 @@ export class CategoryController extends Controller<
                         throw error;
                     });
             }
-            this.categoryList.create(category);
-            return this.categoryFileList.create(category);
+            this.memoryRepository.create(category);
+            return this.fileRepository.create(category);
         } catch (error) {
             if (error instanceof CategoryCreateException) {
                 throw error;
@@ -110,7 +112,7 @@ export class CategoryController extends Controller<
     }
 
     async findById(id: string): Promise<Category> {
-        const category: Category | undefined = this.categoryList.find(id);
+        const category: Category | undefined = this.memoryRepository.find(id);
         if (category) {
             return category;
         }
