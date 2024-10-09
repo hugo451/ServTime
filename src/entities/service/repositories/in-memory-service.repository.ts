@@ -17,10 +17,11 @@ export class ServiceList extends Repository<Service> {
         return ServiceList._instance;
     }
 
-    public setList(list: Service[]): void {
+    init(data: Service[]): Service[] {
         if (this.list.length === 0) {
-            this.list = list;
+            this.list = data;
         }
+        return Array.from(this.list) as Service[];
     }
 
     create(body: Service): Service {
@@ -28,8 +29,18 @@ export class ServiceList extends Repository<Service> {
         return body;
     }
 
+    find(id: string): Service | undefined {
+        return this.list.find((service) => service.id === id);
+    }
+
     delete(id: string): Service {
-        throw new Error('Method not implemented.');
+        const service = this.find(id);
+        if (!service) {
+            throw new Error('Service not found.');
+        }
+        const index = this.list.findIndex((service) => service.id === id);
+        this.list.splice(index, 1);
+        return service;
     }
 
     findAll(): Service[] {
@@ -37,6 +48,12 @@ export class ServiceList extends Repository<Service> {
     }
 
     update(id: string, body: Service): Service {
-        throw new Error('Method not implemented.');
+        const service = this.find(id);
+        if (!service) {
+            throw new Error('Service not found.');
+        }
+        const index = this.list.findIndex((service) => service.id === id);
+        this.list[index] = body;
+        return body;
     }
 }

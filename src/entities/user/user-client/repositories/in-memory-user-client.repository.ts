@@ -30,7 +30,17 @@ export class UserClientList extends Repository<UserClient> {
     }
 
     delete(id: string): UserClient {
-        throw new Error('Method not implemented.');
+        const user = this.find(id);
+        if (!user) {
+            throw new Error('User not found.');
+        }
+        const index = this.list.findIndex((user) => user.id === id);
+        this.list.splice(index, 1);
+        return user;
+    }
+
+    find(id: string): UserClient | undefined {
+        return this.list.find((user) => user.id === id);
     }
 
     findAll(): UserClient[] {
@@ -38,6 +48,12 @@ export class UserClientList extends Repository<UserClient> {
     }
 
     update(id: string, body: UserClient): UserClient {
-        throw new Error('Method not implemented.');
+        const user = this.find(id);
+        if (!user) {
+            throw new Error('User not found.');
+        }
+        const index = this.list.findIndex((user) => user.id === id);
+        this.list[index] = body;
+        return body;
     }
 }

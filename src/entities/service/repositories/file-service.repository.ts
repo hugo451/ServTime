@@ -51,6 +51,13 @@ export class FileServiceRepository extends Repository<Service> {
         }
     }
 
+    init(data: Service[]): Service[] {
+        if (this.findAll().length === 0) {
+            FileServiceRepository._writeFile(data);
+        }
+        return data;
+    }
+
     create(body: Service): Service {
         try {
             const services = FileServiceRepository._readFile();

@@ -1,4 +1,4 @@
-import { CRUDErrorCode } from '../../exceptions/crud-exception';
+// import { CRUDErrorCode } from '../../exceptions/crud-exception';
 import { Exception } from '../../exceptions/exception';
 
 export class UserCreateException extends Exception<UserCreateErrorCode> {

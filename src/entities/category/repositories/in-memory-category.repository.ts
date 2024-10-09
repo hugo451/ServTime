@@ -17,10 +17,11 @@ export class CategoryList extends Repository<Category> {
         return CategoryList._instance;
     }
 
-    public setList(list: Category[]): void {
+    init(list: Category[]): Category[] {
         if (this.list.length === 0) {
             this.list = list;
         }
+        return Array.from(this.list) as Category[];
     }
 
     create(body: Category): Category {
@@ -29,7 +30,13 @@ export class CategoryList extends Repository<Category> {
     }
 
     delete(id: string): Category {
-        throw new Error('Method not implemented.');
+        const category = this.find(id);
+        if (!category) {
+            throw new Error('Category not found.');
+        }
+        const index = this.list.findIndex((category) => category.id === id);
+        this.list.splice(index, 1);
+        return category;
     }
 
     findAll(): Category[] {
@@ -41,6 +48,12 @@ export class CategoryList extends Repository<Category> {
     }
 
     update(id: string, body: Category): Category {
-        throw new Error('Method not implemented.');
+        const category = this.find(id);
+        if (!category) {
+            throw new Error('Category not found.');
+        }
+        const index = this.list.findIndex((category) => category.id === id);
+        this.list[index] = body;
+        return body;
     }
 }

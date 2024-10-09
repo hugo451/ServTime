@@ -5,7 +5,6 @@ import { CRUDErrorCode, CRUDException } from './exceptions/crud-exception';
 import { ServerErrorCode } from './exceptions/server-exception';
 import { Log } from './log/log';
 import { randomUUID } from 'crypto';
-import { LogService } from './log/log.service';
 import { HtmlLogService } from './log/templates/htmlLog';
 
 /**
@@ -15,6 +14,7 @@ import { HtmlLogService } from './log/templates/htmlLog';
  * @template T - Representa o tipo do model (entidade usada na lógica de negócio ou persistência).
  * @template U - Representa o tipo do DTO (objeto de transferência de dados usado para validação e transporte).
  */
+// eslint-disable-next-line @typescript-eslint/no-wrapper-object-types
 export abstract class Controller<T, U extends Object> {
     protected abstract get dto(): new () => U;
     protected abstract get entity(): string;
@@ -22,7 +22,7 @@ export abstract class Controller<T, U extends Object> {
 
     async getRelatory(request: Request, response: Response): Promise<Response> {
         try {
-            const { method } = request.body;
+            // const { method } = request.body;
             const result = await this.htmlLogService.generateRelatory(
                 this.entity,
             );

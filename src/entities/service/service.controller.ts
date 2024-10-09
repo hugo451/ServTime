@@ -8,20 +8,22 @@ import {
 import { Service } from './service';
 import { CreateServiceDto } from './dto/create-service.dto';
 import { CategoryController } from '../category/category.controller';
+import { ServiceFactory } from './repositories/factory/service.factory';
 
 export class ServiceController extends Controller<Service, CreateServiceDto> {
-    private serviceList: ServiceList;
-    private serviceFileList: FileServiceRepository;
+    private memoryRepository: ServiceList;
+    private fileRepository: FileServiceRepository;
     private categoryController: CategoryController;
 
     constructor() {
         super();
-        this.serviceList = ServiceList.instance;
-        this.serviceFileList = FileServiceRepository.instance;
-        this.categoryController = new CategoryController();
+        const repositories = ServiceFactory.createService();
+        this.memoryRepository = repositories.memory;
+        this.fileRepository = repositories.file;
+        this.categoryController = repositories.category;
 
-        const list = this.serviceFileList.findAll();
-        this.serviceList.setList(list);
+        const list = this.fileRepository.findAll();
+        this.memoryRepository.init(list);
     }
 
     protected get entity(): string {
@@ -34,7 +36,7 @@ export class ServiceController extends Controller<Service, CreateServiceDto> {
 
     async handleGetAll(): Promise<Service[]> {
         try {
-            const list = this.serviceList.findAll();
+            const list = this.memoryRepository.findAll();
             const servicesWithCategory = Promise.all(
                 list.map(async (service) => {
                     const category = await this.categoryController.findById(
@@ -59,7 +61,7 @@ export class ServiceController extends Controller<Service, CreateServiceDto> {
 
     async handleUpdate(service: Service): Promise<Service> {
         try {
-            return this.serviceFileList.update(service.id, service);
+            return this.fileRepository.update(service.id, service);
         } catch (error) {
             if (error instanceof ServiceCreateException) {
                 throw error;
@@ -73,7 +75,7 @@ export class ServiceController extends Controller<Service, CreateServiceDto> {
 
     async handleDelete(id: string): Promise<Service> {
         try {
-            return this.serviceFileList.delete(id);
+            return this.fileRepository.delete(id);
         } catch (error) {
             if (error instanceof ServiceCreateException) {
                 throw error;
@@ -87,8 +89,8 @@ export class ServiceController extends Controller<Service, CreateServiceDto> {
 
     async handleCreate(service: Service): Promise<Service> {
         try {
-            this.serviceList.create(service);
-            return this.serviceFileList.create(service);
+            this.memoryRepository.create(service);
+            return this.fileRepository.create(service);
         } catch (error) {
             if (error instanceof ServiceCreateException) {
                 throw error;
