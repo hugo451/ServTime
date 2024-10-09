@@ -28,6 +28,7 @@ export default tseslint.config(
             '**/templates/**',
             'coverage/**',
             'node_modules/',
+            '.husky/',
         ],
     },
 );
