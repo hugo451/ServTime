@@ -1,8 +1,7 @@
-import { stringCapitalize } from "../utils/string-capitalize";
+import { stringCapitalize } from '../utils/string-capitalize';
 
 export function createExceptionTemplate(entity: string): string {
-    return (
-    `
+    return `
     import { Exception } from '../../exceptions/exception';
 
     export class ${stringCapitalize(entity)}CreateException extends Exception<${stringCapitalize(entity)}CreateErrorCode> {
@@ -29,6 +28,5 @@ export function createExceptionTemplate(entity: string): string {
         USER_NAME_NOT_STRING,
     }
 
-    `
-    );
+    `;
 }

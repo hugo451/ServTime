@@ -2,7 +2,10 @@
 
 import { BaseHandler } from '../base.handler';
 import { createFileWithDirectory } from '../../utils/create-file-with-directory';
-import { fileRepositoryTemplate, inMemoryRepositoryTemplate } from '../../templates/repository.template';
+import {
+    fileRepositoryTemplate,
+    inMemoryRepositoryTemplate,
+} from '../../templates/repository.template';
 
 export class RepositoryHandler extends BaseHandler {
     protected shouldHandle(command: string): boolean {
@@ -15,11 +18,19 @@ export class RepositoryHandler extends BaseHandler {
         // Criando repositório in-memory
         const inMemoryContent = inMemoryRepositoryTemplate(entityName);
         const inMemoryFileName = `in-memory-${entityName}.repository.ts`;
-        await createFileWithDirectory(`${entityName}/repositories`, inMemoryFileName, inMemoryContent);
+        await createFileWithDirectory(
+            `${entityName}/repositories`,
+            inMemoryFileName,
+            inMemoryContent,
+        );
 
         // Criando repositório file
         const fileContent = fileRepositoryTemplate(entityName);
         const fileFileName = `file-${entityName}.repository.ts`;
-        await createFileWithDirectory(`${entityName}/repositories`, fileFileName, fileContent);
+        await createFileWithDirectory(
+            `${entityName}/repositories`,
+            fileFileName,
+            fileContent,
+        );
     }
 }

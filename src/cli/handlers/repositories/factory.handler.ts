@@ -19,6 +19,10 @@ export class FactoryHandler extends BaseHandler {
         const factoryFileName = `${entityName}.factory.ts`;
 
         // Criando o arquivo da fábrica na pasta correta
-        await createFileWithDirectory(`${entityName}/repositories/factory`, factoryFileName, factoryContent);
+        await createFileWithDirectory(
+            `${entityName}/repositories/factory`,
+            factoryFileName,
+            factoryContent,
+        );
     }
 }

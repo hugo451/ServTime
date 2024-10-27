@@ -17,6 +17,10 @@ export class ControllerHandler extends BaseHandler {
         const controllerFileName = `${entityName}.controller.ts`;
 
         // Criando o arquivo do controlador usando o utilitário
-        await createFileWithDirectory(entityName, controllerFileName, controllerContent);
+        await createFileWithDirectory(
+            entityName,
+            controllerFileName,
+            controllerContent,
+        );
     }
 }

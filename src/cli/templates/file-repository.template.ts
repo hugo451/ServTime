@@ -1,8 +1,7 @@
-import { stringCapitalize } from "../utils/string-capitalize";
+import { stringCapitalize } from '../utils/string-capitalize';
 
 export function fileRepositoryTemplate(entity: string): string {
-    return (
-    `
+    return `
     import * as path from 'path';
     import * as fs from 'fs';
     import {
@@ -132,6 +131,5 @@ export function fileRepositoryTemplate(entity: string): string {
     }
 
 
-    `
-    );
+    `;
 }

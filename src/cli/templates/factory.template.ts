@@ -1,8 +1,7 @@
-import { stringCapitalize } from "../utils/string-capitalize";
+import { stringCapitalize } from '../utils/string-capitalize';
 
 export function factoryTemplate(entity: string): string {
-    return (
-    `
+    return `
     import { File${stringCapitalize(entity)}Repository } from '../file-entity.repository';
     import { ${stringCapitalize(entity)}List } from '../in-memory-entity.repository';
 
@@ -14,6 +13,5 @@ export function factoryTemplate(entity: string): string {
             };
         }
     }
-    `
-    );
+    `;
 }

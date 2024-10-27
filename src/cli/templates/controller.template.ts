@@ -1,8 +1,7 @@
-import { stringCapitalize } from "../utils/string-capitalize";
+import { stringCapitalize } from '../utils/string-capitalize';
 
-export function controllerTemplate(entity: string): string { 
-    return (
-        `
+export function controllerTemplate(entity: string): string {
+    return `
         import { Controller } from '../controller';
         import { ${stringCapitalize(entity)} } from './${entity}';
         import { Create${stringCapitalize(entity)}Dto } from './dto/create-${entity}.dto';
@@ -112,7 +111,5 @@ export function controllerTemplate(entity: string): string {
                 );
             }
         }
-        `
-    );
+        `;
 }
-

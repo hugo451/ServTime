@@ -19,6 +19,10 @@ export class DtoHandler extends BaseHandler {
         const dtoFileName = `create-${entityName.toLowerCase()}.dto.ts`;
 
         // Criando o arquivo do DTO usando o utilitário
-        await createFileWithDirectory(`${entityName}/dto`, dtoFileName, dtoContent);
+        await createFileWithDirectory(
+            `${entityName}/dto`,
+            dtoFileName,
+            dtoContent,
+        );
     }
 }

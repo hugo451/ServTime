@@ -19,6 +19,10 @@ export class EntityHandler extends BaseHandler {
         const entityFileName = `${entityName.toLowerCase()}.ts`;
 
         // Criando o arquivo da entidade usando o utilitário
-        await createFileWithDirectory(entityName, entityFileName, entityContent);
+        await createFileWithDirectory(
+            entityName,
+            entityFileName,
+            entityContent,
+        );
     }
 }

@@ -1,7 +1,10 @@
-import { LogCreateErrorCode, LogCreateException } from "./exceptions/log-create.exception";
-import { Log } from "./log";
-import { FileLogRepository } from "./repositories/file-log.repository";
-import { LogList } from "./repositories/in-memory-log.repository";
+import {
+    LogCreateErrorCode,
+    LogCreateException,
+} from './exceptions/log-create.exception';
+import { Log } from './log';
+import { FileLogRepository } from './repositories/file-log.repository';
+import { LogList } from './repositories/in-memory-log.repository';
 
 export abstract class LogService {
     private logFileList: FileLogRepository;
@@ -22,22 +25,30 @@ export abstract class LogService {
             if (error instanceof LogCreateException) {
                 throw error;
             }
-            throw new LogCreateException('Failed to create log.', LogCreateErrorCode.CREATE_FAILED);
+            throw new LogCreateException(
+                'Failed to create log.',
+                LogCreateErrorCode.CREATE_FAILED,
+            );
         }
     }
 
     async generateRelatory(entity: string): Promise<unknown> {
         try {
-            const logs = this.logList.findAll().filter(log => log.entity === entity);
+            const logs = this.logList
+                .findAll()
+                .filter((log) => log.entity === entity);
             const result = this.handleGenerateRelatory(logs);
             return result;
         } catch (error) {
             if (error instanceof LogCreateException) {
                 throw error;
             }
-            throw new LogCreateException('Failed to create log.', LogCreateErrorCode.CREATE_FAILED);
+            throw new LogCreateException(
+                'Failed to create log.',
+                LogCreateErrorCode.CREATE_FAILED,
+            );
         }
     }
 
     protected abstract handleGenerateRelatory(logs: Log[]): Promise<unknown>;
-}   
+}

@@ -19,6 +19,10 @@ export class CreateExceptionHandler extends BaseHandler {
         const exceptionFileName = `${entityName}-create.exception.ts`;
 
         // Criando o arquivo da exceção na pasta correta
-        await createFileWithDirectory(`${entityName}/exceptions`, exceptionFileName, exceptionContent);
+        await createFileWithDirectory(
+            `${entityName}/exceptions`,
+            exceptionFileName,
+            exceptionContent,
+        );
     }
 }
