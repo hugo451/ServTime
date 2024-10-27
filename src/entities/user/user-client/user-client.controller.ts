@@ -1,26 +1,25 @@
-import { UserClientFactory } from './repositories/factory/user-client-repository.factory';
-import { UserClientList } from './repositories/in-memory-user-client.repository';
-import { FileUserClientRepository } from './repositories/file-user-client.repository';
-import {
-    UserCreateException,
-    UserCreateErrorCode,
-} from '../exceptions/user-create.exception';
-import { UserClient } from './user-client';
 import { Controller } from '../../controller';
 import { CreateUserDto } from '../dto/create-user.dto';
+import { UserClient } from './user-client';
+import { UserClientFactory } from './repositories/factory/user-client-repository.factory';
+import { GetAllUserClientsCommand } from './commands/GetAllUserClientCommand';
+import { CreateUserClientCommand } from './commands/CreateUserClientCommand';
+import { UpdateUserClientCommand } from './commands/UpdateUserClientCommand';
+import { DeleteUserClientCommand } from './commands/DeleteUserClientCommand';
 
-export class UserClientController extends Controller<
-    UserClient,
-    CreateUserDto
-> {
-    private memoryRepository: UserClientList;
-    private fileRepository: FileUserClientRepository;
+export class UserClientController extends Controller<UserClient, CreateUserDto> {
+    private getAllUserClientsCommand: GetAllUserClientsCommand;
+    private createUserClientCommand: CreateUserClientCommand;
+    private updateUserClientCommand: UpdateUserClientCommand;
+    private deleteUserClientCommand: DeleteUserClientCommand;
 
     constructor() {
         super();
-        const repositories = UserClientFactory.createRepositories();
-        this.memoryRepository = repositories.memory;
-        this.fileRepository = repositories.file;
+        const { memory, file } = UserClientFactory.createRepositories();
+        this.getAllUserClientsCommand = new GetAllUserClientsCommand(memory, file);
+        this.createUserClientCommand = new CreateUserClientCommand(memory, file);
+        this.updateUserClientCommand = new UpdateUserClientCommand(memory, file);
+        this.deleteUserClientCommand = new DeleteUserClientCommand(memory, file);
     }
 
     protected get dto(): new () => CreateUserDto {
@@ -32,64 +31,18 @@ export class UserClientController extends Controller<
     }
 
     async handleGetAll(): Promise<UserClient[]> {
-        try {
-            let list = this.memoryRepository.findAll();
-            if (list.length === 0) {
-                list = this.fileRepository.findAll();
-                this.memoryRepository.init(list);
-            }
-            return list;
-        } catch (error) {
-            if (error instanceof UserCreateException) {
-                throw error;
-            }
-            throw new UserCreateException(
-                'Failed to get all users.',
-                UserCreateErrorCode.FETCH_FAILED,
-            );
-        }
-    }
-
-    async handleUpdate(user: UserClient): Promise<UserClient> {
-        try {
-            return this.fileRepository.update(user.id, user);
-        } catch (error) {
-            if (error instanceof UserCreateException) {
-                throw error;
-            }
-            throw new UserCreateException(
-                'Failed to update user.',
-                UserCreateErrorCode.UPDATE_FAILED,
-            );
-        }
-    }
-
-    async handleDelete(id: string): Promise<UserClient> {
-        try {
-            return this.fileRepository.delete(id);
-        } catch (error) {
-            if (error instanceof UserCreateException) {
-                throw error;
-            }
-            throw new UserCreateException(
-                'Failed to delete user.',
-                UserCreateErrorCode.DELETE_FAILED,
-            );
-        }
+        return this.getAllUserClientsCommand.execute();
     }
 
     async handleCreate(user: UserClient): Promise<UserClient> {
-        try {
-            this.memoryRepository.create(user);
-            return this.fileRepository.create(user);
-        } catch (error) {
-            if (error instanceof UserCreateException) {
-                throw error;
-            }
-            throw new UserCreateException(
-                'Failed to create user.',
-                UserCreateErrorCode.CREATE_FAILED,
-            );
-        }
+        return this.createUserClientCommand.execute(user);
+    }
+
+    async handleUpdate(user: UserClient): Promise<UserClient> {
+        return this.updateUserClientCommand.execute(user);
+    }
+
+    async handleDelete(id: string): Promise<UserClient> {
+        return this.deleteUserClientCommand.execute(id);
     }
 }
