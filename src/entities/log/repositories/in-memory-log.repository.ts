@@ -25,7 +25,7 @@ export class LogList extends Repository<Log> {
     }
 
     setList(newList: Log[]): void {
-        this.list = Array.from(newList); // Define a nova lista de logs
+        this.list = Array.from(newList);
     }
 
     create(body: Log): Log {
