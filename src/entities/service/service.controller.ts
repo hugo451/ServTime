@@ -9,11 +9,13 @@ import { Service } from './service';
 import { CreateServiceDto } from './dto/create-service.dto';
 import { CategoryController } from '../category/category.controller';
 import { ServiceFactory } from './repositories/factory/service.factory';
+import { MementoStore } from '../../memento/mementoStore';
 
 export class ServiceController extends Controller<Service, CreateServiceDto> {
     private memoryRepository: ServiceList;
     private fileRepository: FileServiceRepository;
     private categoryController: CategoryController;
+    private mementoStore: MementoStore<Service[]>;
 
     constructor() {
         super();
@@ -21,9 +23,13 @@ export class ServiceController extends Controller<Service, CreateServiceDto> {
         this.memoryRepository = repositories.memory;
         this.fileRepository = repositories.file;
         this.categoryController = repositories.category;
+        this.mementoStore = new MementoStore<Service[]>();
 
         const list = this.fileRepository.findAll();
         this.memoryRepository.init(list);
+
+        // Armazena o estado inicial no MementoStore
+        this.mementoStore.saveState([...list]);
     }
 
     protected get entity(): string {
@@ -37,7 +43,7 @@ export class ServiceController extends Controller<Service, CreateServiceDto> {
     async handleGetAll(): Promise<Service[]> {
         try {
             const list = this.memoryRepository.findAll();
-            const servicesWithCategory = Promise.all(
+            const servicesWithCategory = await Promise.all(
                 list.map(async (service) => {
                     const category = await this.categoryController.findById(
                         service.categoryId,
@@ -59,8 +65,29 @@ export class ServiceController extends Controller<Service, CreateServiceDto> {
         }
     }
 
+    async handleCreate(service: Service): Promise<Service> {
+        try {
+            const currentState = [...this.memoryRepository.findAll()];
+            this.mementoStore.saveState(currentState);
+
+            this.memoryRepository.create(service);
+            return this.fileRepository.create(service);
+        } catch (error) {
+            if (error instanceof ServiceCreateException) {
+                throw error;
+            }
+            throw new ServiceCreateException(
+                'Failed to create service.',
+                ServiceCreateErrorCode.SERVICE_CREATE_FAILED,
+            );
+        }
+    }
+
     async handleUpdate(service: Service): Promise<Service> {
         try {
+            const currentState = [...this.memoryRepository.findAll()];
+            this.mementoStore.saveState(currentState);
+
             return this.fileRepository.update(service.id, service);
         } catch (error) {
             if (error instanceof ServiceCreateException) {
@@ -75,6 +102,9 @@ export class ServiceController extends Controller<Service, CreateServiceDto> {
 
     async handleDelete(id: string): Promise<Service> {
         try {
+            const currentState = [...this.memoryRepository.findAll()];
+            this.mementoStore.saveState(currentState);
+
             return this.fileRepository.delete(id);
         } catch (error) {
             if (error instanceof ServiceCreateException) {
@@ -87,18 +117,20 @@ export class ServiceController extends Controller<Service, CreateServiceDto> {
         }
     }
 
-    async handleCreate(service: Service): Promise<Service> {
-        try {
-            this.memoryRepository.create(service);
-            return this.fileRepository.create(service);
-        } catch (error) {
-            if (error instanceof ServiceCreateException) {
-                throw error;
-            }
-            throw new ServiceCreateException(
-                'Failed to create service.',
-                ServiceCreateErrorCode.SERVICE_CREATE_FAILED,
-            );
+    // Métodos para desfazer e refazer operações
+    undo(): Service[] | null {
+        const prevState = this.mementoStore.undo();
+        if (prevState) {
+            this.memoryRepository.init(prevState);
         }
+        return prevState;
+    }
+
+    redo(): Service[] | null {
+        const nextState = this.mementoStore.redo();
+        if (nextState) {
+            this.memoryRepository.init(nextState);
+        }
+        return nextState;
     }
 }

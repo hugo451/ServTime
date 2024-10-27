@@ -8,6 +8,7 @@ import {
 import { UserClient } from './user-client';
 import { Controller } from '../../controller';
 import { CreateUserDto } from '../dto/create-user.dto';
+import { MementoStore } from '../../../memento/mementoStore';
 
 export class UserClientController extends Controller<
     UserClient,
@@ -15,12 +16,18 @@ export class UserClientController extends Controller<
 > {
     private memoryRepository: UserClientList;
     private fileRepository: FileUserClientRepository;
+    private mementoStore: MementoStore<UserClient[]>;
 
     constructor() {
         super();
         const repositories = UserClientFactory.createRepositories();
         this.memoryRepository = repositories.memory;
         this.fileRepository = repositories.file;
+        this.mementoStore = new MementoStore<UserClient[]>();
+
+        // Salva o estado inicial dos usuários
+        const initialList = this.memoryRepository.findAll();
+        this.mementoStore.saveState([...initialList]);
     }
 
     protected get dto(): new () => CreateUserDto {
@@ -50,8 +57,29 @@ export class UserClientController extends Controller<
         }
     }
 
+    async handleCreate(user: UserClient): Promise<UserClient> {
+        try {
+            const currentState = [...this.memoryRepository.findAll()];
+            this.mementoStore.saveState(currentState);
+
+            this.memoryRepository.create(user);
+            return this.fileRepository.create(user);
+        } catch (error) {
+            if (error instanceof UserCreateException) {
+                throw error;
+            }
+            throw new UserCreateException(
+                'Failed to create user.',
+                UserCreateErrorCode.CREATE_FAILED,
+            );
+        }
+    }
+
     async handleUpdate(user: UserClient): Promise<UserClient> {
         try {
+            const currentState = [...this.memoryRepository.findAll()];
+            this.mementoStore.saveState(currentState);
+
             return this.fileRepository.update(user.id, user);
         } catch (error) {
             if (error instanceof UserCreateException) {
@@ -66,6 +94,9 @@ export class UserClientController extends Controller<
 
     async handleDelete(id: string): Promise<UserClient> {
         try {
+            const currentState = [...this.memoryRepository.findAll()];
+            this.mementoStore.saveState(currentState);
+
             return this.fileRepository.delete(id);
         } catch (error) {
             if (error instanceof UserCreateException) {
@@ -78,18 +109,20 @@ export class UserClientController extends Controller<
         }
     }
 
-    async handleCreate(user: UserClient): Promise<UserClient> {
-        try {
-            this.memoryRepository.create(user);
-            return this.fileRepository.create(user);
-        } catch (error) {
-            if (error instanceof UserCreateException) {
-                throw error;
-            }
-            throw new UserCreateException(
-                'Failed to create user.',
-                UserCreateErrorCode.CREATE_FAILED,
-            );
+    // Métodos para desfazer e refazer operações
+    undo(): UserClient[] | null {
+        const prevState = this.mementoStore.undo();
+        if (prevState) {
+            this.memoryRepository.init(prevState);
         }
+        return prevState;
+    }
+
+    redo(): UserClient[] | null {
+        const nextState = this.mementoStore.redo();
+        if (nextState) {
+            this.memoryRepository.init(nextState);
+        }
+        return nextState;
     }
 }
