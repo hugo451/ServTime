@@ -11,7 +11,6 @@ export abstract class LogService {
         this.logFileList = FileLogRepository.instance;
         this.logList = LogList.instance;
         const list = this.logFileList.findAll();
-        this.logList.setList(list);
     }
 
     async log(log: Log): Promise<Log> {
