@@ -9,7 +9,8 @@
         "dev": "nodemon --watch src --exec ts-node src/app.ts",
         "prettier-format": "prettier --write 'src/**/*.{js,jsx,ts,tsx,css,json}' --config ./.prettierrc",
         "lint": "eslint .",
-        "prepare": "husky"
+        "prepare": "husky",
+        "create": "ts-node src/cli/index.ts"
     },
     "keywords": [],
     "author": "",
