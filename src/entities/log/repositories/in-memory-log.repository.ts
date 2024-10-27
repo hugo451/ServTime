@@ -24,6 +24,10 @@ export class LogList extends Repository<Log> {
         return Array.from(this.list) as Log[];
     }
 
+    setList(newList: Log[]): void {
+        this.list = Array.from(newList);
+    }
+
     create(body: Log): Log {
         this.list.push(body);
         return body;
