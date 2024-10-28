@@ -8,19 +8,21 @@ import {
 import { UserClient } from './user-client';
 import { Controller } from '../../controller';
 import { CreateUserDto } from '../dto/create-user.dto';
+import { UndoableStore } from '../../../memento/Memento'; // Import the UndoableStore
 
-export class UserClientController extends Controller<
-    UserClient,
-    CreateUserDto
-> {
+export class UserClientController extends Controller<UserClient, CreateUserDto> {
     private memoryRepository: UserClientList;
     private fileRepository: FileUserClientRepository;
+    private userStore: UndoableStore<UserClient[]>; // Store for managing user states
 
     constructor() {
         super();
         const repositories = UserClientFactory.createRepositories();
         this.memoryRepository = repositories.memory;
         this.fileRepository = repositories.file;
+        
+        // Initialize the store with the current list of users
+        this.userStore = new UndoableStore<UserClient[]>(this.memoryRepository.findAll());
     }
 
     protected get dto(): new () => CreateUserDto {
@@ -37,6 +39,7 @@ export class UserClientController extends Controller<
             if (list.length === 0) {
                 list = this.fileRepository.findAll();
                 this.memoryRepository.init(list);
+                this.userStore.setCurrentState(list); // Set the current state in the store
             }
             return list;
         } catch (error) {
@@ -51,8 +54,12 @@ export class UserClientController extends Controller<
     }
 
     async handleUpdate(user: UserClient): Promise<UserClient> {
+        this.userStore.save(); // Save the current state before updating
         try {
-            return this.fileRepository.update(user.id, user);
+            const updatedUser = this.fileRepository.update(user.id, user);
+            this.memoryRepository.update(user.id, user); // Also update in memory
+            this.userStore.setCurrentState(this.memoryRepository.findAll()); // Update store state
+            return updatedUser;
         } catch (error) {
             if (error instanceof UserCreateException) {
                 throw error;
@@ -65,8 +72,12 @@ export class UserClientController extends Controller<
     }
 
     async handleDelete(id: string): Promise<UserClient> {
+        this.userStore.save(); // Save the current state before deleting
         try {
-            return this.fileRepository.delete(id);
+            const deletedUser = this.fileRepository.delete(id);
+            this.memoryRepository.delete(id); // Also delete from memory
+            this.userStore.setCurrentState(this.memoryRepository.findAll()); // Update store state
+            return deletedUser;
         } catch (error) {
             if (error instanceof UserCreateException) {
                 throw error;
@@ -79,9 +90,12 @@ export class UserClientController extends Controller<
     }
 
     async handleCreate(user: UserClient): Promise<UserClient> {
+        this.userStore.save(); // Save the current state before creating
         try {
             this.memoryRepository.create(user);
-            return this.fileRepository.create(user);
+            const createdUser = this.fileRepository.create(user);
+            this.userStore.setCurrentState(this.memoryRepository.findAll()); // Update store state
+            return createdUser;
         } catch (error) {
             if (error instanceof UserCreateException) {
                 throw error;
@@ -91,5 +105,18 @@ export class UserClientController extends Controller<
                 UserCreateErrorCode.CREATE_FAILED,
             );
         }
+    }
+
+    async undo(): Promise<UserClient[]> {
+        const previousState = this.userStore.undo(); // Restore the previous state
+        if (previousState) {
+            this.memoryRepository.init(previousState); // Restore memory repository state
+        } else {
+            throw new UserCreateException(
+                'No state to undo.',
+                UserCreateErrorCode.CREATE_FAILED,
+            );
+        }
+        return previousState;
     }
 }
