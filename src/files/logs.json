@@ -1,0 +1,226 @@
+[
+  {
+    "id": "674c1240-87b0-4725-aea9-dc1213e51b0f",
+    "event": "getAll",
+    "oldValue": "",
+    "newValue": "{}",
+    "timestamp": "2024-10-27T21:03:26.523Z",
+    "entity": "service"
+  },
+  {
+    "id": "3e94b86e-fd30-4402-9cd7-44f9aac9c96a",
+    "event": "create",
+    "oldValue": "",
+    "newValue": "{\"serviceid\":\"550e8400-e29b-41d4-a716-446655440000\",\"name\":\"servicename\",\"type\":\"servicetype\",\"description\":\"servicedescripition\",\"price\":\"9\"}",
+    "timestamp": "2024-10-27T21:03:31.052Z",
+    "entity": "service"
+  },
+  {
+    "id": "9aa8e9b0-aef1-4b37-96f6-7daa910d1ff8",
+    "event": "getAll",
+    "oldValue": "",
+    "newValue": "{}",
+    "timestamp": "2024-10-28T03:57:11.608Z",
+    "entity": "service"
+  },
+  {
+    "id": "c41dc5b1-35bf-45d3-91cf-2a71311c6504",
+    "event": "create",
+    "oldValue": "",
+    "newValue": "{\"serviceid\":\"550e8400-e29b-41d4-a716-446655440000\",\"name\":\"servicename\",\"type\":\"servicetype\",\"description\":\"servicedescripition\",\"price\":\"9\"}",
+    "timestamp": "2024-10-28T03:57:16.659Z",
+    "entity": "service"
+  },
+  {
+    "id": "acdae18a-6838-4ce4-a2e7-0bca41627807",
+    "event": "getAll",
+    "oldValue": "",
+    "newValue": "{}",
+    "timestamp": "2024-10-28T03:57:20.713Z",
+    "entity": "service"
+  },
+  {
+    "id": "0ea0914e-f9bc-4b0c-b3ba-f009f6f72929",
+    "event": "getAll",
+    "oldValue": "",
+    "newValue": "{}",
+    "timestamp": "2024-10-28T03:57:38.644Z",
+    "entity": "category"
+  },
+  {
+    "id": "d35a03c8-2725-4e12-90af-013b689f0050",
+    "event": "create",
+    "oldValue": "",
+    "newValue": "{\"id\":\"bcee35aa-cafa-494c-a607-a27dfbf527a7\",\"category\":\"Beleza 2\"}",
+    "timestamp": "2024-10-28T03:57:50.402Z",
+    "entity": "category"
+  },
+  {
+    "id": "4d5a29ba-4fce-45b6-a165-0382661a9065",
+    "event": "create",
+    "oldValue": "",
+    "newValue": "{\"id\":\"bcee35aa-cafa-494c-a607-a27dfbf527a7\",\"category\":\"Beleza 1\"}",
+    "timestamp": "2024-10-28T03:57:54.900Z",
+    "entity": "category"
+  },
+  {
+    "id": "bb01b29f-4ebf-487f-b519-e0116896e335",
+    "event": "create",
+    "oldValue": "",
+    "newValue": "{\"id\":\"bcee35aa-cafa-494c-a607-a27dfbf527a1\",\"category\":\"Beleza 1\"}",
+    "timestamp": "2024-10-28T03:58:03.191Z",
+    "entity": "category"
+  },
+  {
+    "id": "e1a72de2-569a-4536-ab9e-2e48401a85a0",
+    "event": "getAll",
+    "oldValue": "",
+    "newValue": "{}",
+    "timestamp": "2024-10-28T03:58:06.946Z",
+    "entity": "category"
+  },
+  {
+    "id": "deaecc87-7a9a-4838-852f-d82403bd5f5d",
+    "event": "getAll",
+    "oldValue": "",
+    "newValue": "{}",
+    "timestamp": "2024-10-28T03:58:29.878Z",
+    "entity": "category"
+  },
+  {
+    "id": "1c4fb8d3-d2d9-4173-bafb-81d889dc0de2",
+    "event": "getAll",
+    "oldValue": "",
+    "newValue": "{}",
+    "timestamp": "2024-10-28T03:59:25.317Z",
+    "entity": "category"
+  },
+  {
+    "id": "86860695-c3ea-46a5-8f36-26214baccf51",
+    "event": "create",
+    "oldValue": "",
+    "newValue": "{\"serviceid\":\"550e8400-e29b-41d4-a716-446655440000\",\"name\":\"servicename\",\"type\":\"servicetype\",\"description\":\"servicedescripition\",\"price\":\"9\",\"category\":\"bcee35aa-cafa-494c-a607-a27dfbf527a7\"}",
+    "timestamp": "2024-10-28T03:59:56.667Z",
+    "entity": "service"
+  },
+  {
+    "id": "aa6c257c-38a3-44ac-8ea5-51b6e21210b2",
+    "event": "getAll",
+    "oldValue": "",
+    "newValue": "{}",
+    "timestamp": "2024-10-28T04:00:01.746Z",
+    "entity": "service"
+  },
+  {
+    "id": "d4973c55-36e6-4500-8fc5-4f67ceb70ca2",
+    "event": "getAll",
+    "oldValue": "",
+    "newValue": "{}",
+    "timestamp": "2024-10-28T04:01:18.135Z",
+    "entity": "service"
+  },
+  {
+    "id": "e6189e91-112e-4679-861e-f565ea68bddd",
+    "event": "getAll",
+    "oldValue": "",
+    "newValue": "{}",
+    "timestamp": "2024-10-28T04:01:23.305Z",
+    "entity": "service"
+  },
+  {
+    "id": "0f6095db-6344-4943-a483-a7ccb438d77f",
+    "event": "getAll",
+    "oldValue": "",
+    "newValue": "{}",
+    "timestamp": "2024-10-28T04:01:27.780Z",
+    "entity": "service"
+  },
+  {
+    "id": "b5c35753-5d0b-45b0-be56-9a6898fbed75",
+    "event": "getAll",
+    "oldValue": "",
+    "newValue": "{}",
+    "timestamp": "2024-10-28T04:03:41.111Z",
+    "entity": "service"
+  },
+  {
+    "id": "58c2b193-3e1f-43a7-99c5-4f60b36b68fc",
+    "event": "getAll",
+    "oldValue": "",
+    "newValue": "{}",
+    "timestamp": "2024-10-28T04:04:18.045Z",
+    "entity": "service"
+  },
+  {
+    "id": "4a114ef6-8b94-4c1d-944b-ec9dc5079a27",
+    "event": "getAll",
+    "oldValue": "",
+    "newValue": "{}",
+    "timestamp": "2024-10-28T04:04:56.578Z",
+    "entity": "service"
+  },
+  {
+    "id": "ed0f7f76-4052-4430-aecc-87f140058df0",
+    "event": "getAll",
+    "oldValue": "",
+    "newValue": "{}",
+    "timestamp": "2024-10-28T04:06:41.578Z",
+    "entity": "service"
+  },
+  {
+    "id": "b57d1278-3a86-46dd-b3d6-415491118f6c",
+    "event": "getAll",
+    "oldValue": "",
+    "newValue": "{}",
+    "timestamp": "2024-10-28T04:06:57.902Z",
+    "entity": "service"
+  },
+  {
+    "id": "f9786092-6732-4aad-bee0-929e9c8ac289",
+    "event": "getAll",
+    "oldValue": "",
+    "newValue": "{}",
+    "timestamp": "2024-10-28T04:07:02.372Z",
+    "entity": "service"
+  },
+  {
+    "id": "5447beb6-7431-4e18-a3c2-c9328208da8c",
+    "event": "getAll",
+    "oldValue": "",
+    "newValue": "{}",
+    "timestamp": "2024-10-28T04:10:31.115Z",
+    "entity": "service"
+  },
+  {
+    "id": "975bfffc-e847-4ce6-ad6e-361eff2063e1",
+    "event": "getAll",
+    "oldValue": "",
+    "newValue": "{}",
+    "timestamp": "2024-10-28T04:11:14.084Z",
+    "entity": "service"
+  },
+  {
+    "id": "07b66a24-4c5e-4eb6-98c2-f5f66bfdec8b",
+    "event": "getAll",
+    "oldValue": "",
+    "newValue": "{}",
+    "timestamp": "2024-10-28T04:11:17.547Z",
+    "entity": "service"
+  },
+  {
+    "id": "7f4c51db-a58f-4da1-a198-b0276527992c",
+    "event": "getAll",
+    "oldValue": "",
+    "newValue": "{}",
+    "timestamp": "2024-10-28T04:11:25.526Z",
+    "entity": "category"
+  },
+  {
+    "id": "f839b80c-d910-48ed-968f-2f60f72d8407",
+    "event": "getAll",
+    "oldValue": "",
+    "newValue": "{}",
+    "timestamp": "2024-10-28T04:12:49.415Z",
+    "entity": "service"
+  }
+]
