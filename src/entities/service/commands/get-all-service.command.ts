@@ -24,7 +24,7 @@ export class GetAllServicesCommand implements Command<void, Service[]> {
 
     async execute(): Promise<Service[]> {
         try {
-            const list = this.memoryRepository.findAll();
+            const list = this.fileRepository.findAll();
             const servicesWithCategory = Promise.all(
                 list.map(async (service) => {
                     const category = await this.categoryController.findById(

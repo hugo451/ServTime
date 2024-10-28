@@ -107,6 +107,15 @@ export class FileCategoryRepository extends Repository<Category> {
         }
     }
 
+    find(id: string): Category | undefined {
+        try {
+            const categories = this.findAll();
+            return categories.find((category) => category.id === id);
+        } catch (error) {
+            
+        }
+    }
+
     update(id: string, body: Category): Category {
         try {
             const categorys = FileCategoryRepository._readFile();

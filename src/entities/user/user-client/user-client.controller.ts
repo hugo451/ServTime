@@ -7,7 +7,10 @@ import { CreateUserClientCommand } from './commands/CreateUserClientCommand';
 import { UpdateUserClientCommand } from './commands/UpdateUserClientCommand';
 import { DeleteUserClientCommand } from './commands/DeleteUserClientCommand';
 
-export class UserClientController extends Controller<UserClient, CreateUserDto> {
+export class UserClientController extends Controller<
+    UserClient,
+    CreateUserDto
+> {
     private getAllUserClientsCommand: GetAllUserClientsCommand;
     private createUserClientCommand: CreateUserClientCommand;
     private updateUserClientCommand: UpdateUserClientCommand;
@@ -16,10 +19,22 @@ export class UserClientController extends Controller<UserClient, CreateUserDto> 
     constructor() {
         super();
         const { memory, file } = UserClientFactory.createRepositories();
-        this.getAllUserClientsCommand = new GetAllUserClientsCommand(memory, file);
-        this.createUserClientCommand = new CreateUserClientCommand(memory, file);
-        this.updateUserClientCommand = new UpdateUserClientCommand(memory, file);
-        this.deleteUserClientCommand = new DeleteUserClientCommand(memory, file);
+        this.getAllUserClientsCommand = new GetAllUserClientsCommand(
+            memory,
+            file,
+        );
+        this.createUserClientCommand = new CreateUserClientCommand(
+            memory,
+            file,
+        );
+        this.updateUserClientCommand = new UpdateUserClientCommand(
+            memory,
+            file,
+        );
+        this.deleteUserClientCommand = new DeleteUserClientCommand(
+            memory,
+            file,
+        );
     }
 
     protected get dto(): new () => CreateUserDto {

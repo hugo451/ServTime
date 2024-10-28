@@ -104,6 +104,15 @@ export class FileServiceRepository extends Repository<Service> {
         }
     }
 
+    find(id: string): Service | undefined {
+        try {
+            const services = this.findAll();
+            return services.find((service) => service.id === id);
+        } catch (error) {
+
+        }
+    }
+
     update(id: string, body: Service): Service {
         try {
             const services = FileServiceRepository._readFile();

@@ -27,7 +27,7 @@ export class GetAllCategorysCommand implements Command<void, Category[]> {
 
     async execute(): Promise<Category[]> {
         try {
-            const list = this.memoryRepository.findAll();
+            const list = this.fileRepository.findAll();
 
             const categories = await Promise.all(
                 list.map(async (category) => {

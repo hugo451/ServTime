@@ -2,13 +2,21 @@ import { Command } from '../../../../command';
 import { UserClient } from '../user-client';
 import { UserClientList } from '../repositories/in-memory-user-client.repository';
 import { FileUserClientRepository } from '../repositories/file-user-client.repository';
-import { UserCreateException, UserCreateErrorCode } from '../../exceptions/user-create.exception';
+import {
+    UserCreateException,
+    UserCreateErrorCode,
+} from '../../exceptions/user-create.exception';
 
-export class UpdateUserClientCommand implements Command<UserClient, UserClient> {
+export class UpdateUserClientCommand
+    implements Command<UserClient, UserClient>
+{
     private memoryRepository: UserClientList;
     private fileRepository: FileUserClientRepository;
 
-    constructor(memoryRepository: UserClientList, fileRepository: FileUserClientRepository) {
+    constructor(
+        memoryRepository: UserClientList,
+        fileRepository: FileUserClientRepository,
+    ) {
         this.memoryRepository = memoryRepository;
         this.fileRepository = fileRepository;
     }

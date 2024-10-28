@@ -2,22 +2,24 @@ import { Log } from '../log';
 import { LogService } from '../log.service';
 
 export class HtmlLogService extends LogService {
-  public static _instance: HtmlLogService;
+    public static _instance: HtmlLogService;
 
-  private constructor() {
-    super();
-  }
-
-  public static get instance(): HtmlLogService {
-    if (!HtmlLogService._instance) {
-        HtmlLogService._instance = new HtmlLogService();
+    private constructor() {
+        super();
     }
-    return HtmlLogService._instance;
-}
 
-  protected async handleGenerateRelatory(logs: Log[]): Promise<string> {
-    return logs.map(log => {
-      return `
+    public static get instance(): HtmlLogService {
+        if (!HtmlLogService._instance) {
+            HtmlLogService._instance = new HtmlLogService();
+        }
+        return HtmlLogService._instance;
+    }
+
+    protected async handleGenerateRelatory(logs: Log[]): Promise<string> {
+        return (
+            logs
+                .map((log) => {
+                    return `
         <div>
           <h2>Log ${log.id}</h2>
           <p>Event: ${log.event}</p>
@@ -26,9 +28,10 @@ export class HtmlLogService extends LogService {
           <p>Timestamp: ${log.timestamp.toString()}</p>
         </div>
       `;
-    }).reduce((html, current) => {
-      return html + current;
-    }, '<html><body>')
-    + '</body></html>';
-  }
+                })
+                .reduce((html, current) => {
+                    return html + current;
+                }, '<html><body>') + '</body></html>'
+        );
+    }
 }

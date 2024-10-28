@@ -20,7 +20,7 @@ export class GetByIdCategoryCommand implements Command<string, Category> {
     }
 
     async execute(id: string): Promise<Category> {
-        const category: Category | undefined = this.memoryRepository.find(id);
+        const category: Category | undefined = this.fileRepository.find(id);
         if (category) {
             return category;
         }
