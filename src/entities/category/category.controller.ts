@@ -1,4 +1,3 @@
-
 import { Controller } from '../controller';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { Category } from './category';
@@ -9,7 +8,10 @@ import { UpdateCategoryCommand } from './commands/update-category.command';
 import { DeleteCategoryCommand } from './commands/delete-category.command';
 import { GetByIdCategoryCommand } from './commands/get-by-id-category.command';
 
-export class CategoryController extends Controller<Category, CreateCategoryDto> {
+export class CategoryController extends Controller<
+    Category,
+    CreateCategoryDto
+> {
     private getAllCategorysCommand: GetAllCategorysCommand;
     private createCategoryCommand: CreateCategoryCommand;
     private updateCategoryCommand: UpdateCategoryCommand;

@@ -1,9 +1,11 @@
-
 import { Command } from '../../../command';
 import { Category } from '../category';
 import { CategoryList } from '../repositories/in-memory-category.repository';
 import { FileCategoryRepository } from '../repositories/file-category.repository';
-import { CategoryCreateException, CategoryCreateErrorCode } from '../exceptions/category-create.exception';
+import {
+    CategoryCreateException,
+    CategoryCreateErrorCode,
+} from '../exceptions/category-create.exception';
 import { GetByIdCategoryCommand } from './get-by-id-category.command';
 
 export class CreateCategoryCommand implements Command<Category, Category> {
@@ -11,16 +13,23 @@ export class CreateCategoryCommand implements Command<Category, Category> {
     private fileRepository: FileCategoryRepository;
     private getByIdCategoryCommand: GetByIdCategoryCommand;
 
-    constructor(memoryRepository: CategoryList, fileRepository: FileCategoryRepository) {
+    constructor(
+        memoryRepository: CategoryList,
+        fileRepository: FileCategoryRepository,
+    ) {
         this.memoryRepository = memoryRepository;
         this.fileRepository = fileRepository;
-        this.getByIdCategoryCommand = new GetByIdCategoryCommand(memoryRepository, fileRepository);
+        this.getByIdCategoryCommand = new GetByIdCategoryCommand(
+            memoryRepository,
+            fileRepository,
+        );
     }
 
     async execute(category: Category): Promise<Category> {
         try {
             if (category.parentId) {
-                this.getByIdCategoryCommand.execute(category.parentId)
+                this.getByIdCategoryCommand
+                    .execute(category.parentId)
                     .then((parent) => (category.parent = parent))
                     .catch((error) => {
                         throw error;
