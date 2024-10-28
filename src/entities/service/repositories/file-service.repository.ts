@@ -67,7 +67,7 @@ export class FileServiceRepository extends Repository<Service> {
         } catch (error) {
             throw new ServiceCreateException(
                 'Failed to create service.',
-                ServiceCreateErrorCode.SERVICE_CREATE_FAILED,
+                ServiceCreateErrorCode.CREATE_FAILED,
             );
         }
     }
@@ -79,7 +79,7 @@ export class FileServiceRepository extends Repository<Service> {
             if (index === -1) {
                 throw new ServiceCreateException(
                     'Service not found.',
-                    ServiceCreateErrorCode.SERVICE_NOT_FOUND,
+                    ServiceCreateErrorCode.NOT_FOUND,
                 );
             }
             const [deletedService] = services.splice(index, 1);
@@ -88,7 +88,7 @@ export class FileServiceRepository extends Repository<Service> {
         } catch (error) {
             throw new ServiceCreateException(
                 'Failed to delete service.',
-                ServiceCreateErrorCode.SERVICE_DELETE_FAILED,
+                ServiceCreateErrorCode.DELETE_FAILED,
             );
         }
     }
@@ -99,7 +99,7 @@ export class FileServiceRepository extends Repository<Service> {
         } catch (error) {
             throw new ServiceCreateException(
                 'Failed to find services.',
-                ServiceCreateErrorCode.SERVICE_FETCH_FAILED,
+                ServiceCreateErrorCode.FETCH_FAILED,
             );
         }
     }
@@ -111,7 +111,7 @@ export class FileServiceRepository extends Repository<Service> {
             if (index === -1) {
                 throw new ServiceCreateException(
                     'Service not found.',
-                    ServiceCreateErrorCode.SERVICE_NOT_FOUND,
+                    ServiceCreateErrorCode.NOT_FOUND,
                 );
             }
             services[index] = { ...services[index], ...body };
@@ -120,7 +120,7 @@ export class FileServiceRepository extends Repository<Service> {
         } catch (error) {
             throw new ServiceCreateException(
                 'Failed to update service.',
-                ServiceCreateErrorCode.SERVICE_UPDATE_FAILED,
+                ServiceCreateErrorCode.UPDATE_FAILED,
             );
         }
     }

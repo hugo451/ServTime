@@ -1,104 +1,48 @@
 import { Controller } from '../controller';
-import { FileServiceRepository } from './repositories/file-service.repository';
-import { ServiceList } from './repositories/in-memory-service.repository';
-import {
-    ServiceCreateException,
-    ServiceCreateErrorCode,
-} from './exceptions/service-create.exception';
-import { Service } from './service';
 import { CreateServiceDto } from './dto/create-service.dto';
-import { CategoryController } from '../category/category.controller';
+import { Service } from './service';
 import { ServiceFactory } from './repositories/factory/service.factory';
+import { GetAllServicesCommand } from './commands/get-all-service.command';
+import { CreateServiceCommand } from './commands/create-service.command';
+import { UpdateServiceCommand } from './commands/update-service.command';
+import { DeleteServiceCommand } from './commands/delete-service.command';
 
 export class ServiceController extends Controller<Service, CreateServiceDto> {
-    private memoryRepository: ServiceList;
-    private fileRepository: FileServiceRepository;
-    private categoryController: CategoryController;
+    private getAllServicesCommand: GetAllServicesCommand;
+    private createServiceCommand: CreateServiceCommand;
+    private updateServiceCommand: UpdateServiceCommand;
+    private deleteServiceCommand: DeleteServiceCommand;
 
     constructor() {
         super();
-        const repositories = ServiceFactory.createService();
-        this.memoryRepository = repositories.memory;
-        this.fileRepository = repositories.file;
-        this.categoryController = repositories.category;
-
-        const list = this.fileRepository.findAll();
-        this.memoryRepository.init(list);
-    }
-
-    protected get entity(): string {
-        return 'service';
+        const { memory, file } = ServiceFactory.createRepositories();
+        this.getAllServicesCommand = new GetAllServicesCommand(memory, file);
+        this.createServiceCommand = new CreateServiceCommand(memory, file);
+        this.updateServiceCommand = new UpdateServiceCommand(memory, file);
+        this.deleteServiceCommand = new DeleteServiceCommand(memory, file);
     }
 
     protected get dto(): new () => CreateServiceDto {
         return CreateServiceDto;
     }
 
+    protected get entity(): string {
+        return 'service';
+    }
+
     async handleGetAll(): Promise<Service[]> {
-        try {
-            const list = this.memoryRepository.findAll();
-            const servicesWithCategory = Promise.all(
-                list.map(async (service) => {
-                    const category = await this.categoryController.findById(
-                        service.categoryId,
-                    );
-                    service.category = category;
-                    return service;
-                }),
-            );
-
-            return servicesWithCategory;
-        } catch (error) {
-            if (error instanceof ServiceCreateException) {
-                throw error;
-            }
-            throw new ServiceCreateException(
-                'Failed to get all services.',
-                ServiceCreateErrorCode.SERVICE_FETCH_FAILED,
-            );
-        }
-    }
-
-    async handleUpdate(service: Service): Promise<Service> {
-        try {
-            return this.fileRepository.update(service.id, service);
-        } catch (error) {
-            if (error instanceof ServiceCreateException) {
-                throw error;
-            }
-            throw new ServiceCreateException(
-                'Failed to update service.',
-                ServiceCreateErrorCode.SERVICE_UPDATE_FAILED,
-            );
-        }
-    }
-
-    async handleDelete(id: string): Promise<Service> {
-        try {
-            return this.fileRepository.delete(id);
-        } catch (error) {
-            if (error instanceof ServiceCreateException) {
-                throw error;
-            }
-            throw new ServiceCreateException(
-                'Failed to delete service.',
-                ServiceCreateErrorCode.SERVICE_DELETE_FAILED,
-            );
-        }
+        return this.getAllServicesCommand.execute();
     }
 
     async handleCreate(service: Service): Promise<Service> {
-        try {
-            this.memoryRepository.create(service);
-            return this.fileRepository.create(service);
-        } catch (error) {
-            if (error instanceof ServiceCreateException) {
-                throw error;
-            }
-            throw new ServiceCreateException(
-                'Failed to create service.',
-                ServiceCreateErrorCode.SERVICE_CREATE_FAILED,
-            );
-        }
+        return this.createServiceCommand.execute(service);
+    }
+
+    async handleUpdate(service: Service): Promise<Service> {
+        return this.updateServiceCommand.execute(service);
+    }
+
+    async handleDelete(id: string): Promise<Service> {
+        return this.deleteServiceCommand.execute(id);
     }
 }

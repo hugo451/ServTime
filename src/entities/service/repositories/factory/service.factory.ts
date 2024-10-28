@@ -3,7 +3,7 @@ import { FileServiceRepository } from '../file-service.repository';
 import { ServiceList } from '../in-memory-service.repository';
 
 export class ServiceFactory {
-    static createService() {
+    static createRepositories() {
         return {
             memory: ServiceList.instance,
             file: FileServiceRepository.instance,

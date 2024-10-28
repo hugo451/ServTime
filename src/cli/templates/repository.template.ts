@@ -1,4 +1,4 @@
-import { inMemoryRepositoryTemplate } from './in-memory-repository.template';
-import { fileRepositoryTemplate } from './file-repository.template';
+import { inMemoryRepositoryTemplate } from './repositories/in-memory-repository.template';
+import { fileRepositoryTemplate } from './repositories/file-repository.template';
 
 export { inMemoryRepositoryTemplate, fileRepositoryTemplate };

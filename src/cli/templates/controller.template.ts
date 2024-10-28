@@ -3,112 +3,51 @@ import { stringCapitalize } from '../utils/string-capitalize';
 export function controllerTemplate(entity: string): string {
     return `
         import { Controller } from '../controller';
-        import { ${stringCapitalize(entity)} } from './${entity}';
         import { Create${stringCapitalize(entity)}Dto } from './dto/create-${entity}.dto';
-        import {
-            ${stringCapitalize(entity)}CreateErrorCode,
-            ${stringCapitalize(entity)}CreateException,
-        } from './exceptions/${entity}-create.exception';
+        import { ${stringCapitalize(entity)} } from './${entity}';
         import { ${stringCapitalize(entity)}Factory } from './repositories/factory/${entity}.factory';
-        import { File${stringCapitalize(entity)}Repository } from './repositories/file-${entity}.repository';
-        import { ${stringCapitalize(entity)}List } from './repositories/in-memory-${entity}.repository';
+        import { GetAll${stringCapitalize(entity)}sCommand } from './commands/get-all-${entity}.command';
+        import { Create${stringCapitalize(entity)}Command } from './commands/create-${entity}.command';
+        import { Update${stringCapitalize(entity)}Command } from './commands/update-${entity}.command';
+        import { Delete${stringCapitalize(entity)}Command } from './commands/delete-${entity}.command';
 
-        export class ${stringCapitalize(entity)}Controller extends Controller<
-            ${stringCapitalize(entity)},
-            Create${stringCapitalize(entity)}Dto
-        > {
-            private memoryRepository: ${stringCapitalize(entity)}List;
-            private fileRepository: File${stringCapitalize(entity)}Repository;
+        export class ${stringCapitalize(entity)}Controller extends Controller<${stringCapitalize(entity)}, Create${stringCapitalize(entity)}Dto> {
+            private getAll${stringCapitalize(entity)}sCommand: GetAll${stringCapitalize(entity)}sCommand;
+            private create${stringCapitalize(entity)}Command: Create${stringCapitalize(entity)}Command;
+            private update${stringCapitalize(entity)}Command: Update${stringCapitalize(entity)}Command;
+            private delete${stringCapitalize(entity)}Command: Delete${stringCapitalize(entity)}Command;
 
             constructor() {
                 super();
-                const repositories = ${stringCapitalize(entity)}Factory.createRepositories();
-                this.fileRepository = repositories.file;
-                this.memoryRepository = repositories.memory;
-
-                const list = this.fileRepository.findAll();
-                this.memoryRepository.init(list);
-            }
-
-            protected get entity(): string {
-                return '${entity}';
+                const { memory, file } = ${stringCapitalize(entity)}Factory.createRepositories();
+                this.getAll${stringCapitalize(entity)}sCommand = new GetAll${stringCapitalize(entity)}sCommand(memory, file);
+                this.create${stringCapitalize(entity)}Command = new Create${stringCapitalize(entity)}Command(memory, file);
+                this.update${stringCapitalize(entity)}Command = new Update${stringCapitalize(entity)}Command(memory, file);
+                this.delete${stringCapitalize(entity)}Command = new Delete${stringCapitalize(entity)}Command(memory, file);
             }
 
             protected get dto(): new () => Create${stringCapitalize(entity)}Dto {
                 return Create${stringCapitalize(entity)}Dto;
             }
 
+            protected get entity(): string {
+                return '${entity}';
+            }
+
             async handleGetAll(): Promise<${stringCapitalize(entity)}[]> {
-                try {
-                    let list = this.memoryRepository.findAll();
-                    if (list.length === 0) {
-                        list = this.fileRepository.findAll();
-                        this.memoryRepository.init(list);
-                    }
-                    return list;
-                } catch (error) {
-                    if (error instanceof ${stringCapitalize(entity)}CreateException) {
-                        throw error;
-                    }
-                    throw new ${stringCapitalize(entity)}CreateException(
-                        'Failed to get all ${entity}s.',
-                        ${stringCapitalize(entity)}CreateErrorCode.FETCH_FAILED,
-                    );
-                }
-            }
-
-            async handleUpdate(${entity}: ${stringCapitalize(entity)}): Promise<${stringCapitalize(entity)}> {
-                try {
-                    return this.fileRepository.update(${entity}.id, ${entity});
-                } catch (error) {
-                    if (error instanceof ${stringCapitalize(entity)}CreateException) {
-                        throw error;
-                    }
-                    throw new ${stringCapitalize(entity)}CreateException(
-                        'Failed to update ${entity}.',
-                        ${stringCapitalize(entity)}CreateErrorCode.UPDATE_FAILED,
-                    );
-                }
-            }
-
-            async handleDelete(id: string): Promise<${stringCapitalize(entity)}> {
-                try {
-                    return this.fileRepository.delete(id);
-                } catch (error) {
-                    if (error instanceof ${stringCapitalize(entity)}CreateException) {
-                        throw error;
-                    }
-                    throw new ${stringCapitalize(entity)}CreateException(
-                        'Failed to delete ${entity}.',
-                        ${stringCapitalize(entity)}CreateErrorCode.DELETE_FAILED,
-                    );
-                }
+                return this.getAll${stringCapitalize(entity)}sCommand.execute();
             }
 
             async handleCreate(${entity}: ${stringCapitalize(entity)}): Promise<${stringCapitalize(entity)}> {
-                try {
-                    this.memoryRepository.create(${entity});
-                    return this.fileRepository.create(${entity});
-                } catch (error) {
-                    if (error instanceof ${stringCapitalize(entity)}CreateException) {
-                        throw error;
-                    }
-                    throw new ${stringCapitalize(entity)}CreateException(
-                        'Failed to create ${entity}.',
-                        ${stringCapitalize(entity)}CreateErrorCode.CREATE_FAILED,
-                    );
-                }
+                return this.create${stringCapitalize(entity)}Command.execute(${entity});
             }
 
-            async findById(id: string): Promise<${stringCapitalize(entity)}> {
-                const ${entity}: ${stringCapitalize(entity)} | undefined = this.memoryRepository.find(id);
-                if (${entity}) {
-                    return ${entity};
-                }
-                throw new ${stringCapitalize(entity)}CreateException(
-                    'This ${stringCapitalize(entity)} does not exists',
-                    ${stringCapitalize(entity)}CreateErrorCode.NOT_FOUND,
-                );
+            async handleUpdate(${entity}: ${stringCapitalize(entity)}): Promise<${stringCapitalize(entity)}> {
+                return this.update${stringCapitalize(entity)}Command.execute(${entity});
+            }
+
+            async handleDelete(id: string): Promise<${stringCapitalize(entity)}> {
+                return this.delete${stringCapitalize(entity)}Command.execute(id);
             }
         }
         `;
