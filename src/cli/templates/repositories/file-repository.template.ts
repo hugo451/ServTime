@@ -1,4 +1,4 @@
-import { stringCapitalize } from '../utils/string-capitalize';
+import { stringCapitalize } from '../../utils/string-capitalize';
 
 export function fileRepositoryTemplate(entity: string): string {
     return `

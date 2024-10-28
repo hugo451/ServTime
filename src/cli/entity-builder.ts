@@ -6,6 +6,7 @@ import { EntityHandler } from './handlers/entity.handler';
 import { CreateExceptionHandler } from './handlers/exceptions/create-exceptions.handler';
 import { FactoryHandler } from './handlers/repositories/factory.handler';
 import { RepositoryHandler } from './handlers/repositories/repository,handler';
+import { CommandHandler } from './handlers/commands/create-command.handler';
 
 export class EntityBuilder {
     private firstHandler: BaseHandler;
@@ -18,12 +19,14 @@ export class EntityBuilder {
         const exceptionsHandler = new CreateExceptionHandler();
         const repositoriesHandler = new RepositoryHandler();
         const factoryHandler = new FactoryHandler();
+        const commandHandler = new CommandHandler();
 
         // Configura a cadeia
         directoriesHandler
             .setNext(entityHandler)
             .setNext(factoryHandler)
             .setNext(repositoriesHandler)
+            .setNext(commandHandler)
             .setNext(controllerHandler)
             .setNext(dtoHandler)
             .setNext(exceptionsHandler);
