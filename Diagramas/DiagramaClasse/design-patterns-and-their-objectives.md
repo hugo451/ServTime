@@ -27,4 +27,12 @@ De modo que não é necessário saber qual é a implementação de respositoriye
 
 - **Adapter**: O padrão de projeto Adapter é utilizado para permitir que objetos com interfaces incompatíveis possam interagir entre si. Em nosso projeto, utilizamos o padrão Adapter para adaptar a interface de `Logs` tanto para PDF quanto para HTML, isso acontece nas classes `HtmlLogService` e `PdfLogService`.
 
-- **Template Method**: Define o esqueleto de um algoritmo, deixando alguns passos para as subclasses implementarem. Em nosso projeto, definimos templates em várias classes, essas que são utilizados em praticamente todas as outras classes. Listando as classes que definimos templates: `Category`, `Log`, `Service`, `User`, `UserClient`, `Controller`, `Repository`, `Exception`, `LogService`, `Repository`.
+- **Template Method**: Define o esqueleto de um algoritmo, deixando alguns passos para as subclasses implementarem. Em nosso projeto, definimos templates em várias classes, essas que são utilizados em praticamente todas as outras classes. Listando as classes que definimos templates: `Category`, `Log`, `Service`, `User`, `UserClient`, `Controller`, `Repository`, `Exception`, `LogService`, `Repository`, `createCommandTemplate`, `deleteCommandTemplate`, `getAllCommandTemplate`, `updateCommandTemplate` e outras.
+
+- **Chain of Responsibility**: Utilizamos em nosso projeto para encadeadar objetos, de modo que a solicitação é passada ao longo da cadeia até que algum objeto a trate.  As classes ligadas a esse padrão são: `createCommandTemplate`, `deletCommandTemplate`, `getAllCommandTemplate`, `updateCommandTemplate`, `BaseHandler` e `EntityBuilder`.
+
+
+- **Command**: Utilizamos o Command para encapsular uma solicitação como um objeto, permitindo que esta seja parametrizada. As classes ligadas a esse padrão são:  `getAllUserClientsCommand`, `DeleteUserClientCommand`, `CreateUserClientCommand`, `UpdateUserClientCommand`, `GetIdCategory`, `UpdateCategoryCommand`, `DeleteCategoryCommand`,`GetAllServicesCommand`, `UpdateServiceCommand`, `CreateServiceCommand`, `DeleterServiceCommand`, `createCommandTemplate`, `deleteCommandTemplate`, `getAllCommandTemplate`, `updateCommandTemplate`, `BaseHandler` e `EntityBuilder`.
+
+
+- **Facade**: Em nosso projeto utilizamos o padrão Facade para fornecer uma interface simplificada e unificada para um conjunto de interfaces (Repositorys). A classe principal que implementa é a classe `Repository`.
