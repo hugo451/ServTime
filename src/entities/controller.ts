@@ -6,6 +6,7 @@ import { ServerErrorCode } from './exceptions/server-exception';
 import { Log } from './log/log';
 import { randomUUID } from 'crypto';
 import { HtmlLogService } from './log/templates/htmlLog';
+import { MementoService } from './memento/memento.service';
 
 /**
  * Classe abstrata `Controller` que define a estrutura básica para controladores genéricos.
@@ -19,6 +20,7 @@ export abstract class Controller<T, U extends Object> {
     protected abstract get dto(): new () => U;
     protected abstract get entity(): string;
     private htmlLogService = HtmlLogService.instance;
+    protected memento = new MementoService<T>();
 
     async getRelatory(request: Request, response: Response): Promise<Response> {
         try {
@@ -45,8 +47,8 @@ export abstract class Controller<T, U extends Object> {
             }
 
             // Create user
-            const userBody: T = request.body;
-            const result = await this.handleCreate(userBody);
+            const entityBody: T = request.body;
+            const result = await this.handleCreate(entityBody);
             return response.status(201).json(result);
         } catch (error) {
             return this.catchError(response, error as Error);
@@ -83,10 +85,12 @@ export abstract class Controller<T, U extends Object> {
     }
 
     async update(request: Request, response: Response): Promise<Response> {
-        const userBody: T = request.body;
+        const entityBody: T = request.body;
         try {
-            const updatedUser = await this.handleUpdate(userBody);
-            return response.status(200).json(updatedUser);
+            const updatedEntity = await this.handleUpdate(entityBody);
+            this.memento.updateState(updatedEntity);
+            console.log(this.memento.currentState);
+            return response.status(200).json(updatedEntity);
         } catch (error) {
             return this.catchError(response, error as Error);
         } finally {
@@ -100,6 +104,14 @@ export abstract class Controller<T, U extends Object> {
             };
             this.htmlLogService.log(log);
         }
+    }
+
+    async undo (request: Request, response: Response): Promise<Response> {
+        request.body = this.memento.undo();
+        if(request.body === null){
+            return response.status(204).json({'message': 'No previous State. '})
+        }
+        return await this.update(request, response);
     }
 
     async delete(request: Request, response: Response): Promise<Response> {

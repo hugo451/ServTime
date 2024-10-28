@@ -12,6 +12,8 @@ router.get('/', (req, res) => {
 const userClientController = new UserClientController();
 router.get('/client', (req, res) => userClientController.getAll(req, res));
 router.post('/client', (req, res) => userClientController.create(req, res));
+router.put('/client', (req, res) => userClientController.update(req, res));
+router.get('/client/undo', (req, res) => userClientController.undo(req, res));
 
 const serviceController = new ServiceController();
 router.get('/service', (req, res) => serviceController.getAll(req, res));

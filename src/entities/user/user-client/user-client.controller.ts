@@ -21,6 +21,7 @@ export class UserClientController extends Controller<
         const repositories = UserClientFactory.createRepositories();
         this.memoryRepository = repositories.memory;
         this.fileRepository = repositories.file;
+        this.memoryRepository.init(this.fileRepository.findAll());
     }
 
     protected get dto(): new () => CreateUserDto {
@@ -52,8 +53,10 @@ export class UserClientController extends Controller<
 
     async handleUpdate(user: UserClient): Promise<UserClient> {
         try {
-            return this.fileRepository.update(user.id, user);
+            this.fileRepository.update(user.id, user)
+            return this.memoryRepository.update(user.id, user);
         } catch (error) {
+            console.log(error)
             if (error instanceof UserCreateException) {
                 throw error;
             }
@@ -66,6 +69,7 @@ export class UserClientController extends Controller<
 
     async handleDelete(id: string): Promise<UserClient> {
         try {
+            this.memoryRepository.delete(id);
             return this.fileRepository.delete(id);
         } catch (error) {
             if (error instanceof UserCreateException) {
