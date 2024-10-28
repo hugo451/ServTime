@@ -4,7 +4,7 @@ import {
     createCommandTemplate,
     deleteCommandTemplate,
     getAllCommandTemplate,
-    updateCommandTemplate
+    updateCommandTemplate,
 } from '../../templates/command.template';
 
 export class CommandHandler extends BaseHandler {
@@ -18,24 +18,23 @@ export class CommandHandler extends BaseHandler {
         const commands = [
             {
                 template: createCommandTemplate,
-                name: 'create'
+                name: 'create',
             },
             {
                 template: deleteCommandTemplate,
-                name: 'delete'
+                name: 'delete',
             },
             {
                 template: getAllCommandTemplate,
-                name: 'get-all'
+                name: 'get-all',
             },
             {
                 template: updateCommandTemplate,
-                name: 'update'
-            }
+                name: 'update',
+            },
         ];
 
         commands.forEach(async (command) => {
-
             const commandContent = command.template(entityName);
             const commandFileName = `${command.name}-${entityName}.command.ts`;
             await createFileWithDirectory(
