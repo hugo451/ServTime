@@ -1,124 +1,56 @@
-import { Controller } from '../controller';
-import { Category } from './category';
-import { CreateCategoryDto } from './dto/create-category.dto';
-import {
-    CategoryCreateErrorCode,
-    CategoryCreateException,
-} from './exceptions/category-create.exception';
-import { CategoryFactory } from './repositories/factory/category.factory';
-import { FileCategoryRepository } from './repositories/file-category.repository';
-import { CategoryList } from './repositories/in-memory-category.repository';
 
-export class CategoryController extends Controller<
-    Category,
-    CreateCategoryDto
-> {
-    private memoryRepository: CategoryList;
-    private fileRepository: FileCategoryRepository;
+import { Controller } from '../controller';
+import { CreateCategoryDto } from './dto/create-category.dto';
+import { Category } from './category';
+import { CategoryFactory } from './repositories/factory/category.factory';
+import { GetAllCategorysCommand } from './commands/get-all-category.command';
+import { CreateCategoryCommand } from './commands/create-category.command';
+import { UpdateCategoryCommand } from './commands/update-category.command';
+import { DeleteCategoryCommand } from './commands/delete-category.command';
+import { GetByIdCategoryCommand } from './commands/get-by-id-category.command';
+
+export class CategoryController extends Controller<Category, CreateCategoryDto> {
+    private getAllCategorysCommand: GetAllCategorysCommand;
+    private createCategoryCommand: CreateCategoryCommand;
+    private updateCategoryCommand: UpdateCategoryCommand;
+    private deleteCategoryCommand: DeleteCategoryCommand;
+    private getByIdCategoryCommand: GetByIdCategoryCommand;
 
     constructor() {
         super();
-        const repositories = CategoryFactory.createRepositories();
-        this.fileRepository = repositories.file;
-        this.memoryRepository = repositories.memory;
-
-        const list = this.fileRepository.findAll();
-        this.memoryRepository.init(list);
-    }
-
-    protected get entity(): string {
-        return 'category';
+        const { memory, file } = CategoryFactory.createRepositories();
+        this.getAllCategorysCommand = new GetAllCategorysCommand(memory, file);
+        this.createCategoryCommand = new CreateCategoryCommand(memory, file);
+        this.updateCategoryCommand = new UpdateCategoryCommand(memory, file);
+        this.deleteCategoryCommand = new DeleteCategoryCommand(memory, file);
+        this.getByIdCategoryCommand = new GetByIdCategoryCommand(memory, file);
     }
 
     protected get dto(): new () => CreateCategoryDto {
         return CreateCategoryDto;
     }
 
+    protected get entity(): string {
+        return 'category';
+    }
+
     async handleGetAll(): Promise<Category[]> {
-        try {
-            const list = this.memoryRepository.findAll();
-
-            const categories = await Promise.all(
-                list.map(async (category) => {
-                    if (category.parentId) {
-                        const parent = await this.findById(category.parentId);
-                        if (parent) {
-                            category.parent = parent;
-                        }
-                    }
-                    return category;
-                }),
-            );
-            return categories;
-        } catch (error) {
-            if (error instanceof CategoryCreateException) {
-                throw error;
-            }
-            throw new CategoryCreateException(
-                'Failed to get all categories.',
-                CategoryCreateErrorCode.FETCH_FAILED,
-            );
-        }
-    }
-
-    async handleUpdate(category: Category): Promise<Category> {
-        try {
-            return this.fileRepository.update(category.id, category);
-        } catch (error) {
-            if (error instanceof CategoryCreateException) {
-                throw error;
-            }
-            throw new CategoryCreateException(
-                'Failed to update category.',
-                CategoryCreateErrorCode.UPDATE_FAILED,
-            );
-        }
-    }
-
-    async handleDelete(id: string): Promise<Category> {
-        try {
-            return this.fileRepository.delete(id);
-        } catch (error) {
-            if (error instanceof CategoryCreateException) {
-                throw error;
-            }
-            throw new CategoryCreateException(
-                'Failed to delete category.',
-                CategoryCreateErrorCode.DELETE_FAILED,
-            );
-        }
+        return this.getAllCategorysCommand.execute();
     }
 
     async handleCreate(category: Category): Promise<Category> {
-        try {
-            if (category.parentId) {
-                this.findById(category.parentId)
-                    .then((parent) => (category.parent = parent))
-                    .catch((error) => {
-                        throw error;
-                    });
-            }
-            this.memoryRepository.create(category);
-            return this.fileRepository.create(category);
-        } catch (error) {
-            if (error instanceof CategoryCreateException) {
-                throw error;
-            }
-            throw new CategoryCreateException(
-                'Failed to create category.',
-                CategoryCreateErrorCode.CREATE_FAILED,
-            );
-        }
+        return this.createCategoryCommand.execute(category);
+    }
+
+    async handleUpdate(category: Category): Promise<Category> {
+        return this.updateCategoryCommand.execute(category);
+    }
+
+    async handleDelete(id: string): Promise<Category> {
+        return this.deleteCategoryCommand.execute(id);
     }
 
     async findById(id: string): Promise<Category> {
-        const category: Category | undefined = this.memoryRepository.find(id);
-        if (category) {
-            return category;
-        }
-        throw new CategoryCreateException(
-            'This Category does not exists',
-            CategoryCreateErrorCode.NOT_FOUND,
-        );
+        return this.getByIdCategoryCommand.execute(id);
     }
 }
