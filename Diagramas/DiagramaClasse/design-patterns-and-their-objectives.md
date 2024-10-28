@@ -33,3 +33,6 @@ De modo que não é necessário saber qual é a implementação de respositoriye
 
 
 - **Command**: Utilizamos o Command para encapsular uma solicitação como um objeto, permitindo que esta seja parametrizada. As classes ligadas a esse padrão são:  `getAllUserClientsCommand`, `DeleteUserClientCommand`, `CreateUserClientCommand`, `UpdateUserClientCommand`, `GetIdCategory`, `UpdateCategoryCommand`, `DeleteCategoryCommand`,`GetAllServicesCommand`, `UpdateServiceCommand`, `CreateServiceCommand`, `DeleterServiceCommand`, `createCommandTemplate`, `deleteCommandTemplate`, `getAllCommandTemplate`, `updateCommandTemplate`, `BaseHandler` e `EntityBuilder`.
+
+
+- **Facade**: Em nosso projeto utilizamos o padrão Facade para fornecer uma interface simplificada e unificada para um conjunto de interfaces (Repositorys). A classe principal que implementa é a classe `Repository`.
