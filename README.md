@@ -74,6 +74,21 @@ Once the application is running, you can access it through your web browser at `
   3. Set the URL to [`http://localhost:3000/client`]
   4. Click "Send" to send the request.
 
+## CLI Usage
+
+There's a CLI to create entities or some parts of them, like controller, repositories or even commands. To use this, run the cmd command:
+```
+npm run create [command] [entity]
+```
+Those are the commands:
+* `module` to create all entity and patterns
+* `entity` to create the entity interface
+* `dto` to create the DTO classes
+* `directories` to create the directory arch
+* `controller` to create the controller class
+* `repository` to create all repositories and factory
+* `create-exception` to create the create exception
+
 
 ## Contributing
 
